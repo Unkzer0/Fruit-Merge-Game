@@ -4,28 +4,103 @@ using UnityEngine;
 
 public class FruitDropperController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float minX = -2.5f; // Left boundary
-    [SerializeField] private float maxX = 2.5f;  // Right boundary
+
+    [Header("Movement Settings")]
+    [SerializeField] private float dragSpeed = 10f;
+    [SerializeField] private float minX = -2.5f;
+    [SerializeField] private float maxX = 2.5f;
+
+    [Header("Fruit Drop Settings")]
+    [SerializeField] private Transform dropSpawnPoint;
+
+    private Camera mainCam;
+    private bool isDragging = false;
+    private Vector3 targetPos;
+    private bool canDrop = true;
+
+    private void Start()
+    {
+        mainCam = Camera.main;
+        targetPos = transform.position;
+    }
 
     private void Update()
     {
+#if UNITY_EDITOR
+        HandleEditorInput();
+#else
         HandleTouchInput();
+#endif
+
+        if (isDragging)
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPos, dragSpeed * Time.deltaTime);
+        }
+    }
+
+    private void HandleEditorInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            MoveToPoint(Input.mousePosition, instant: true);
+            TryDropFruit();
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            MoveToPoint(Input.mousePosition, instant: false);
+        }
     }
 
     private void HandleTouchInput()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount == 0) return;
+
+        Touch touch = Input.GetTouch(0);
+
+        if (touch.phase == TouchPhase.Began)
         {
-            Touch touch = Input.GetTouch(0);
-            Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            MoveToPoint(touch.position, instant: true);
+            TryDropFruit();
+        }
+        else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+        {
+            MoveToPoint(touch.position, instant: false);
+        }
+    }
 
-            // Clamp the x-position to stay within bounds
-            float clampedX = Mathf.Clamp(touchPos.x, minX, maxX);
+    private void MoveToPoint(Vector2 screenPosition, bool instant)
+    {
+        Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPosition);
+        float clampedX = Mathf.Clamp(worldPos.x, minX, maxX);
+        Vector3 newTargetPos = new Vector3(clampedX, transform.position.y, transform.position.z);
 
-            // Move dropper only along X axis
-            Vector3 newPos = new Vector3(clampedX, transform.position.y, transform.position.z);
-            transform.position = Vector3.Lerp(transform.position, newPos, moveSpeed * Time.deltaTime);
+        if (instant)
+        {
+            transform.position = newTargetPos;
+            isDragging = false;
+        }
+        else
+        {
+            targetPos = newTargetPos;
+            isDragging = true;
+        }
+    }
+
+    private void TryDropFruit()
+    {
+        if (!canDrop || FruitSelector.instance == null) return;
+
+        Vector3 spawnPos = dropSpawnPoint != null ? dropSpawnPoint.position : transform.position;
+        GameObject fruit = Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
+
+        // Disable further drops until this one settles
+        canDrop = false;
+
+        // Attach Fruit.cs script and assign callback
+        Fruit fruitScript = fruit.GetComponent<Fruit>();
+        if (fruitScript != null)
+        {
+            fruitScript.onSettled = () => { canDrop = true; };
         }
     }
 }
