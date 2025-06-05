@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1776140184661216918}
   m_Layer: 6
   m_Name: plum
-  m_TagString: Untagged
+  m_TagString: Fruit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,6 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8edf2a5ef9441a445bfee897742b5d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fruitData: {fileID: 11400000, guid: 79681110c9de7204791508607565eb59, type: 2}
+  fruitIndex: 8
 --- !u!58 &1776140184661216918
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -51,22 +51,7 @@ public class FruitDropperController : MonoBehaviour
         }
     }
 
-    private void HandleTouchInput()
-    {
-        if (Input.touchCount == 0) return;
-
-        Touch touch = Input.GetTouch(0);
-
-        if (touch.phase == TouchPhase.Began)
-        {
-            MoveToPoint(touch.position, instant: true);
-            TryDropFruit();
-        }
-        else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-        {
-            MoveToPoint(touch.position, instant: false);
-        }
-    }
+    
 
     private void MoveToPoint(Vector2 screenPosition, bool instant)
     {
@@ -85,6 +70,12 @@ public class FruitDropperController : MonoBehaviour
             isDragging = true;
         }
     }
+
+    public void SetCanDrop(bool value)
+    {
+        canDrop = value;
+    }
+
 
     private void TryDropFruit()
     {

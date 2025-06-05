@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ScoreManager : MonoBehaviour
+{
+    public static ScoreManager instance;
+
+    [Header("UI")]
+    [SerializeField] private Text scoreText;
+    [SerializeField] private Text highScoreText;
+
+    private int currentScore = 0;
+    private int highScore = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        UpdateScoreUI();
+    }
+
+    public void AddScore(int points)
+    {
+        currentScore += points;
+
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
+
+        UpdateScoreUI();
+    }
+
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null) scoreText.text = "Score : " + currentScore;
+        if (highScoreText != null) highScoreText.text = "High Score : " + highScore;
+    }
+
+    public void ResetScore()
+    {
+        currentScore = 0;
+        UpdateScoreUI();
+    }
+}

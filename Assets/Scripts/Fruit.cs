@@ -5,9 +5,13 @@ using UnityEngine;
 public class Fruit : MonoBehaviour
 {
     public Action onSettled;
+    public FruitData fruitData;
+    [Header("Fruit Properties")]
+    public int fruitIndex; // Assigned when spawned
 
     private Rigidbody2D rb;
     private bool hasSettled = false;
+    private bool isMerging = false;
 
     private void Start()
     {
@@ -16,18 +20,33 @@ public class Fruit : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (hasSettled) return;
+        // Handle merge logic
+        if (!isMerging && collision.gameObject.CompareTag("Fruit"))
+        {
+            Fruit otherFruit = collision.gameObject.GetComponent<Fruit>();
 
-        // Optional: You can add a condition to make sure it hit ground or another fruit
-        hasSettled = true;
+            if (otherFruit != null && otherFruit.fruitIndex == fruitIndex && !otherFruit.isMerging)
+            {
+                isMerging = true;
+                otherFruit.isMerging = true;
 
-        // Delay to ensure the fruit visually settles
-        Invoke(nameof(NotifySettled), 0.2f);
+                Vector3 mergePos = (transform.position + otherFruit.transform.position) / 2f;
+
+                // Call MergeManager to handle the merge
+                MergeManager.instance.MergeFruits(fruitIndex, transform.gameObject, otherFruit.gameObject, mergePos);
+            }
+        }
+
+        if (!hasSettled)
+        {
+            hasSettled = true;
+            Invoke(nameof(NotifySettled), 0.2f);
+        }
     }
 
     private void NotifySettled()
     {
         onSettled?.Invoke();
-        onSettled = null; // Avoid calling again
+        onSettled = null;
     }
 }

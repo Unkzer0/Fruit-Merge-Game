@@ -10,13 +10,20 @@ public class FruitSelector : MonoBehaviour
     [Header("Fruit Prefabs")]
     public GameObject[] Fruits;
 
-    [Header("UI")]
-    [SerializeField] private Image nextFruitImage;
+    [Header("Fruit Sprites")]
     [SerializeField] private Sprite[] fruitSprites;
 
+    [Header("Next Fruit Display")]
+    [SerializeField] private Transform nextFruitDisplayTransform; // GameObject that moves with dropper
+    [SerializeField] private SpriteRenderer nextFruitSpriteRenderer;
+    [SerializeField] private Transform dropper;
+    [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0); // offset above dropper
+    [SerializeField] private float bobbingAmplitude = 0.1f;
+    [SerializeField] private float bobbingSpeed = 2f;
+
     [Header("Fruit Settings")]
-    public int HighestStartingIndex = 3; // Fruit pool: 0 to this index
-    [SerializeField] private float[] weights; // Matching spawn chances
+    public int HighestStartingIndex = 3;
+    [SerializeField] private float[] weights;
 
     public GameObject NextFruit { get; private set; }
     public int NextFruitIndex { get; private set; }
@@ -35,14 +42,24 @@ public class FruitSelector : MonoBehaviour
         PickNextFruit();
     }
 
+    private void Update()
+    {
+        if (nextFruitDisplayTransform != null && dropper != null)
+        {
+            Vector3 bobbingOffset = offset + new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
+            nextFruitDisplayTransform.position = dropper.position + bobbingOffset;
+        }
+    }
+
     public void PickNextFruit()
     {
         NextFruitIndex = GetWeightedRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
-        if (nextFruitImage != null && fruitSprites.Length > NextFruitIndex)
+        // Update the preview sprite
+        if (nextFruitSpriteRenderer != null && fruitSprites.Length > NextFruitIndex)
         {
-            nextFruitImage.sprite = fruitSprites[NextFruitIndex];
+            nextFruitSpriteRenderer.sprite = fruitSprites[NextFruitIndex];
         }
     }
 
