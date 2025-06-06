@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c3e8a380854e6f4f96b6d98e2b60ea0, type: 3}
-  m_Name: watermelonData
+  m_Name: WatermelonData
   m_EditorClassIdentifier: 
   fruitName: watermelon
   sprite: {fileID: 21300000, guid: 548bf1c87e86a2b498065e8dd92d8ca9, type: 3}
