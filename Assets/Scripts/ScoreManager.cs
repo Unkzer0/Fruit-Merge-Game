@@ -27,6 +27,10 @@ public class ScoreManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         UpdateScoreUI();
     }
+    public int GetCurrentScore()
+    {
+        return currentScore;
+    }
 
     public void AddScore(int points)
     {
