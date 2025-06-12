@@ -15,6 +15,7 @@ public class FruitDropperController : MonoBehaviour
     [SerializeField] private float swipeDropThreshold = 1000f; // Pixels/second
     [SerializeField] private AudioSource dropSound; // Assign a drop sound here
 
+    private bool sfxMuted = false;
     private Camera mainCam;
     private bool isDragging = false;
     private Vector3 targetPos;
@@ -22,6 +23,11 @@ public class FruitDropperController : MonoBehaviour
 
     private Vector2 lastTouchPosition;
     private float lastTouchTime;
+
+    private void Awake()
+    {
+        sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
+    }
 
     private void Start()
     {
@@ -31,6 +37,10 @@ public class FruitDropperController : MonoBehaviour
 
     private void Update()
     {
+        // Prevent input if any panel is active
+        if (PanelManager.instance != null && PanelManager.instance.IsAnyPanelOpen())
+            return;
+
         HandleTouchInput();
 
         if (isDragging)
@@ -38,6 +48,7 @@ public class FruitDropperController : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, targetPos, dragSpeed * Time.deltaTime);
         }
     }
+
 
     private void HandleTouchInput()
     {
@@ -94,6 +105,14 @@ public class FruitDropperController : MonoBehaviour
         canDrop = value;
     }
 
+    public void ToggleSFX()
+    {
+        sfxMuted = !sfxMuted;
+        PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
+    }
+
+    public bool IsSFXMuted() => sfxMuted;
+
     private void TryDropFruit()
     {
         if (!canDrop || FruitSelector.instance == null) return;
@@ -104,7 +123,7 @@ public class FruitDropperController : MonoBehaviour
         canDrop = false;
 
         // Play drop sound
-        if (dropSound != null)
+        if (!sfxMuted && dropSound != null)
         {
             dropSound.Play();
         }

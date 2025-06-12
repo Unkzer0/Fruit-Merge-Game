@@ -1,19 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PanelManager : MonoBehaviour
 {
-   public static PanelManager instance;
+    public static PanelManager instance;
+    public GameOverPanel gameOverPanelScript;
 
-    [Header("Game Over Panel")]
+
+    [Header("Panels")]
+    [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private Text scoreText;
-    [SerializeField] private Image screenshotImage;
-    [SerializeField] private Button restartButton;
-    [SerializeField] private Button shareButton;
+    [SerializeField] private GameObject settingsPanel;
 
     private void Awake()
     {
@@ -25,27 +21,31 @@ public class PanelManager : MonoBehaviour
 
     private void Start()
     {
+        ShowOnly(mainMenuPanel); // Show main menu at start
+    }
+    public bool IsAnyPanelOpen()
+    {
+        return (mainMenuPanel.activeSelf ||
+                gameOverPanel.activeSelf ||
+                settingsPanel.activeSelf);
+    }
+
+    public void ShowOnly(GameObject panelToShow)
+    {
+        // Hide all panels first
+        mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
+        settingsPanel.SetActive(false);
 
-        restartButton.onClick.AddListener(RestartGame);
-        shareButton.onClick.AddListener(ShareScreenshot);
+        // Show requested panel
+        if (panelToShow != null)
+        {
+            panelToShow.SetActive(true);
+        }
     }
 
-    public void ShowGameOverPanel(int finalScore, Sprite screenshot)
-    {
-        gameOverPanel.SetActive(true);
-        scoreText.text = "Score: " + finalScore;
-        screenshotImage.sprite = screenshot;
-    }
-
-    private void RestartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    private void ShareScreenshot()
-    {
-        // Platform-specific share code (placeholder)
-        Debug.Log("Share functionality goes here.");
-    }
+    // Helper methods for convenience
+    public void ShowMainMenu() => ShowOnly(mainMenuPanel);
+    public void ShowGameOver() => ShowOnly(gameOverPanel);
+    public void ShowSettings() => ShowOnly(settingsPanel);
 }

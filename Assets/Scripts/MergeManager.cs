@@ -9,14 +9,24 @@ public class MergeManager : MonoBehaviour
     [SerializeField] private AudioClip mergeSound;
     [SerializeField] private float bounceScale = 1.2f;
     [SerializeField] private float bounceDuration = 0.2f;
-
+    private bool sfxMuted = false;
     private void Awake()
     {
+        sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
+
         if (instance == null)
             instance = this;
         else
             Destroy(gameObject);
     }
+
+    public void ToggleSFX()
+    {
+        sfxMuted = !sfxMuted;
+        PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
+    }
+
+    public bool IsSFXMuted() => sfxMuted;
 
     public void MergeFruits(int currentIndex, GameObject fruit1, GameObject fruit2, Vector3 spawnPos)
     {
@@ -34,26 +44,16 @@ public class MergeManager : MonoBehaviour
         int nextIndex = currentIndex + 1;
         if (nextIndex < FruitSelector.instance.Fruits.Length)
         {
-            // Get the prefab scale
-            Vector3 prefabScale = FruitSelector.instance.Fruits[nextIndex].transform.localScale;
-
-            // Spawn the new fruit and apply correct scale
             GameObject newFruit = Instantiate(FruitSelector.instance.Fruits[nextIndex], spawnPos, Quaternion.identity);
-            newFruit.transform.localScale = prefabScale;
+            newFruit.transform.localScale = Vector3.one; // Always scale to 1,1,1
 
             //  Play merge sound
-            if (mergeSound != null)
+            if (!sfxMuted && mergeSound != null)
             {
                 AudioSource.PlayClipAtPoint(mergeSound, spawnPos);
             }
 
-            //  Bounce animation
-            LeanTween.scale(newFruit, prefabScale * bounceScale, bounceDuration)
-                .setEaseOutBounce()
-                .setOnComplete(() =>
-                {
-                    LeanTween.scale(newFruit, prefabScale, 0.1f);
-                });
+            StartCoroutine(BounceEffect(newFruit.transform, bounceScale, bounceDuration));
 
             // Setup merged fruit
             Fruit fruitScript = newFruit.GetComponent<Fruit>();
@@ -61,7 +61,6 @@ public class MergeManager : MonoBehaviour
             {
                 fruitScript.fruitIndex = nextIndex;
 
-                // Allow dropper to reset when fruit settles
                 fruitScript.onSettled = () =>
                 {
                     FruitDropperController dropper = FindObjectOfType<FruitDropperController>();
@@ -73,4 +72,47 @@ public class MergeManager : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator BounceEffect(Transform target, float scaleMultiplier, float duration)
+    {
+        if (target == null) yield break;
+
+        Vector3 originalScale = Vector3.one;
+        Vector3 targetScale = originalScale * scaleMultiplier;
+
+        float timer = 0f;
+
+        // Scale up
+        while (timer < duration)
+        {
+            if (target == null) yield break;
+
+            float t = timer / duration;
+            target.localScale = Vector3.Lerp(originalScale, targetScale, t);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (target != null)
+            target.localScale = targetScale;
+
+        timer = 0f;
+
+        // Scale down
+        while (timer < 0.1f)
+        {
+            if (target == null) yield break;
+
+            float t = timer / 0.1f;
+            target.localScale = Vector3.Lerp(targetScale, originalScale, t);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (target != null)
+            target.localScale = originalScale;
+    }
+
+
+
 }
