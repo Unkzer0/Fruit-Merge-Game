@@ -61,11 +61,13 @@ public class FruitDropperController : MonoBehaviour
             case TouchPhase.Began:
                 lastTouchPosition = touch.position;
                 lastTouchTime = Time.time;
+                FruitSelector.instance?.NotifyTouch();
                 MoveToPoint(touch.position, instant: true);
                 break;
 
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
+                FruitSelector.instance?.NotifyTouch();
                 MoveToPoint(touch.position, instant: false);
                 break;
 
@@ -84,7 +86,8 @@ public class FruitDropperController : MonoBehaviour
 
     private void MoveToPoint(Vector2 screenPosition, bool instant)
     {
-        Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPosition);
+        Vector3 screenPoint = new Vector3(screenPosition.x, screenPosition.y, mainCam.WorldToScreenPoint(transform.position).z);
+        Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPoint);
         float clampedX = Mathf.Clamp(worldPos.x, minX, maxX);
         Vector3 newTargetPos = new Vector3(clampedX, transform.position.y, transform.position.z);
 

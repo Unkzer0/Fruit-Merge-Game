@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class FruitSelector : MonoBehaviour
 {
     public static FruitSelector instance;
+    private float lastTouchTime;
+
 
     [Header("Fruit Prefabs")]
     public GameObject[] Fruits;
@@ -13,17 +15,20 @@ public class FruitSelector : MonoBehaviour
     [Header("Fruit Sprites")]
     [SerializeField] private Sprite[] fruitSprites;
 
-    [Header("Next Fruit Display")]
-    [SerializeField] private Transform nextFruitDisplayTransform; // GameObject that moves with dropper
+    [Header("Current & Next Fruit Display")]
+    [SerializeField] private SpriteRenderer currentFruitSpriteRenderer;
     [SerializeField] private SpriteRenderer nextFruitSpriteRenderer;
-    [SerializeField] private Transform dropper;
-    [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0); // offset above dropper
+    [SerializeField] private Transform displayFollowTransform; 
+    [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
     [SerializeField] private float bobbingAmplitude = 0.1f;
     [SerializeField] private float bobbingSpeed = 2f;
-
+    
     [Header("Fruit Settings")]
     public int HighestStartingIndex = 3;
     [SerializeField] private float[] weights;
+
+    public GameObject CurrentFruit { get; private set; }
+    public int CurrentFruitIndex { get; private set; }
 
     public GameObject NextFruit { get; private set; }
     public int NextFruitIndex { get; private set; }
@@ -39,35 +44,73 @@ public class FruitSelector : MonoBehaviour
     private void Start()
     {
         ValidateWeights();
-        PickNextFruit();
+        InitFruitQueue();
+        lastTouchTime = Time.time;
     }
 
     private void Update()
     {
-        if (nextFruitDisplayTransform != null && dropper != null)
+        if (displayFollowTransform != null && currentFruitSpriteRenderer != null)
         {
-            Vector3 bobbingOffset = offset + new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
-            nextFruitDisplayTransform.position = dropper.position + bobbingOffset;
+            bool isIdle = Time.time - lastTouchTime > 10f;
+
+            Vector3 position = displayFollowTransform.position + offset;
+
+            if (isIdle)
+            {
+                Vector3 bobbing = new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
+                position += bobbing;
+            }
+
+            currentFruitSpriteRenderer.transform.position = position;
         }
+
     }
 
-    public void PickNextFruit()
+    public void NotifyTouch()
     {
+        lastTouchTime = Time.time;
+    }
+
+
+    private void InitFruitQueue()
+    {
+        CurrentFruitIndex = GetWeightedRandomIndex();
+        CurrentFruit = Fruits[CurrentFruitIndex];
+
         NextFruitIndex = GetWeightedRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
-        // Update the preview sprite
+        UpdateUI();
+    }
+
+    
+    public GameObject GetFruitToSpawn()
+    {
+        GameObject fruit = CurrentFruit;
+
+  
+        CurrentFruitIndex = NextFruitIndex;
+        CurrentFruit = Fruits[CurrentFruitIndex];
+
+        NextFruitIndex = GetWeightedRandomIndex();
+        NextFruit = Fruits[NextFruitIndex];
+
+        UpdateUI();
+        return fruit;
+    }
+
+    private void UpdateUI()
+    {
+        if (currentFruitSpriteRenderer != null && fruitSprites.Length > CurrentFruitIndex)
+        {
+            currentFruitSpriteRenderer.sprite = fruitSprites[CurrentFruitIndex];
+        }
+
         if (nextFruitSpriteRenderer != null && fruitSprites.Length > NextFruitIndex)
         {
             nextFruitSpriteRenderer.sprite = fruitSprites[NextFruitIndex];
         }
-    }
-
-    public GameObject GetFruitToSpawn()
-    {
-        GameObject fruit = NextFruit;
-        PickNextFruit();
-        return fruit;
     }
 
     private int GetWeightedRandomIndex()
@@ -87,7 +130,7 @@ public class FruitSelector : MonoBehaviour
             randomValue -= weights[i];
         }
 
-        return 0; // fallback
+        return 0;
     }
 
     private void ValidateWeights()

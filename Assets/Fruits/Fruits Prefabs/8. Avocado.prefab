@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1105857365992524487
+--- !u!1 &3099486295837772590
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2143350030809795895}
-  - component: {fileID: 8572340421547819994}
-  - component: {fileID: 1218721686768986101}
-  - component: {fileID: 956666527314123522}
-  - component: {fileID: 1117116315361055956}
+  - component: {fileID: 9019464831690389749}
+  - component: {fileID: 1877563950277384547}
+  - component: {fileID: 3084168810386354573}
+  - component: {fileID: 3107112646007385532}
+  - component: {fileID: 410903859397963072}
   m_Layer: 6
   m_Name: 8. Avocado
   m_TagString: Fruit
@@ -20,13 +20,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2143350030809795895
+--- !u!4 &9019464831690389749
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105857365992524487}
+  m_GameObject: {fileID: 3099486295837772590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -35,13 +35,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8572340421547819994
+--- !u!212 &1877563950277384547
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105857365992524487}
+  m_GameObject: {fileID: 3099486295837772590}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: cd57337287a1c704eb67f2251ae95227, type: 3}
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 21300000, guid: d4e8fb757ab81f549a6d8c1556f536be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -87,54 +87,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &1218721686768986101
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105857365992524487}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1.5
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!114 &956666527314123522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105857365992524487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8edf2a5ef9441a445bfee897742b5d0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fruitData: {fileID: 11400000, guid: c6e4a3b3aab6ad24ba1c2cf28ffb1fa3, type: 2}
-  fruitIndex: 7
---- !u!60 &1117116315361055956
+--- !u!60 &3084168810386354573
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105857365992524487}
+  m_GameObject: {fileID: 3099486295837772590}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -172,27 +131,108 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.555, y: -0.074999996}
-      - {x: 0.545, y: 0.035}
-      - {x: 0.39499998, y: 0.375}
-      - {x: 0.33499998, y: 0.465}
-      - {x: 0.155, y: 0.625}
-      - {x: 0.085, y: 0.645}
-      - {x: -0.155, y: 0.645}
-      - {x: -0.275, y: 0.545}
-      - {x: -0.36499998, y: 0.45499998}
-      - {x: -0.49499997, y: 0.205}
-      - {x: -0.555, y: 0.005}
-      - {x: -0.565, y: -0.074999996}
-      - {x: -0.565, y: -0.325}
-      - {x: -0.53499997, y: -0.415}
-      - {x: -0.475, y: -0.505}
-      - {x: -0.345, y: -0.625}
-      - {x: -0.325, y: -0.645}
-      - {x: -0.21499999, y: -0.695}
-      - {x: -0.155, y: -0.72499996}
-      - {x: 0.175, y: -0.72499996}
-      - {x: 0.3832078, y: -0.6114161}
-      - {x: 0.52927774, y: -0.39499998}
-      - {x: 0.555, y: -0.275}
+    - - {x: 0.42809713, y: -0.22056973}
+      - {x: 0.4377371, y: -0.13306132}
+      - {x: 0.4259903, y: -0.033115618}
+      - {x: 0.39717373, y: 0.10456981}
+      - {x: 0.3574978, y: 0.21583188}
+      - {x: 0.2692263, y: 0.38430372}
+      - {x: 0.26776594, y: 0.3847771}
+      - {x: 0.22761929, y: 0.4398282}
+      - {x: 0.16575986, y: 0.49876904}
+      - {x: 0.08847451, y: 0.5411032}
+      - {x: 0.08449334, y: 0.54302436}
+      - {x: 0.073599696, y: 0.5473383}
+      - {x: -0.0045200586, y: 0.55635697}
+      - {x: -0.034534037, y: 0.55577004}
+      - {x: -0.078003705, y: 0.54969907}
+      - {x: -0.12775296, y: 0.53211945}
+      - {x: -0.15104419, y: 0.5184051}
+      - {x: -0.17779475, y: 0.49275228}
+      - {x: -0.24302214, y: 0.4185166}
+      - {x: -0.2438007, y: 0.4177796}
+      - {x: -0.26652515, y: 0.39244804}
+      - {x: -0.28754127, y: 0.3626143}
+      - {x: -0.31311578, y: 0.31048587}
+      - {x: -0.3512156, y: 0.22607312}
+      - {x: -0.37269688, y: 0.17623469}
+      - {x: -0.41328287, y: 0.044589326}
+      - {x: -0.41941795, y: 0.0097685885}
+      - {x: -0.43390036, y: -0.15762354}
+      - {x: -0.4339277, y: -0.19601366}
+      - {x: -0.43012226, y: -0.22302201}
+      - {x: -0.420563, y: -0.26939705}
+      - {x: -0.39197278, y: -0.33400634}
+      - {x: -0.3573921, y: -0.38780594}
+      - {x: -0.2808222, y: -0.4585469}
+      - {x: -0.24238676, y: -0.48528463}
+      - {x: -0.21074128, y: -0.5018766}
+      - {x: -0.18156433, y: -0.51735187}
+      - {x: -0.1696353, y: -0.5227783}
+      - {x: -0.14407831, y: -0.53344744}
+      - {x: -0.13727814, y: -0.5347807}
+      - {x: -0.112754405, y: -0.53861886}
+      - {x: -0.085772514, y: -0.5426404}
+      - {x: -0.08478558, y: -0.54231066}
+      - {x: -0.02798134, y: -0.5462597}
+      - {x: -0.012905717, y: -0.5479686}
+      - {x: 0.048659563, y: -0.5448476}
+      - {x: 0.050165415, y: -0.5459441}
+      - {x: 0.115126744, y: -0.53792554}
+      - {x: 0.13274527, y: -0.53474945}
+      - {x: 0.18289685, y: -0.520151}
+      - {x: 0.24901783, y: -0.48534536}
+      - {x: 0.2540995, y: -0.4824416}
+      - {x: 0.2503208, y: -0.48519638}
+      - {x: 0.25119573, y: -0.48607132}
+      - {x: 0.26592815, y: -0.47295752}
+      - {x: 0.3403896, y: -0.41154292}
+      - {x: 0.35047406, y: -0.4028676}
+      - {x: 0.3853904, y: -0.35173506}
+      - {x: 0.40250993, y: -0.30300957}
+      - {x: 0.40383863, y: -0.3016809}
+      - {x: 0.40396762, y: -0.2988608}
+      - {x: 0.40929878, y: -0.28580382}
+      - {x: 0.40929875, y: -0.28713247}
   m_UseDelaunayMesh: 0
+--- !u!50 &3107112646007385532
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3099486295837772590}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1.35
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!114 &410903859397963072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3099486295837772590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8edf2a5ef9441a445bfee897742b5d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fruitData: {fileID: 11400000, guid: c6e4a3b3aab6ad24ba1c2cf28ffb1fa3, type: 2}
+  fruitIndex: 7
