@@ -1,15 +1,26 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverTrigger : MonoBehaviour
 {
+    [Header("Screenshot Settings")]
+    [SerializeField] private Camera screenshotCamera;
+    [SerializeField] private int screenshotWidth;
+    [SerializeField] private int screenshotHeight; 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Fruit"))
         {
             int finalScore = ScoreManager.instance.GetCurrentScore();
-            Destroy(other.gameObject); // Immediately destroy the fruit
+            Destroy(other.gameObject);
 
-            // Start coroutine to show Game Over panel after 5 seconds
+            // Enable screenshot camera just before rendering
+            screenshotCamera.enabled = true;
+            RenderTexture rt = ScreenshotUtility.CaptureCustomArea(screenshotCamera, screenshotWidth, screenshotHeight);
+            screenshotCamera.enabled = false;
+
+            PanelManager.instance?.gameOverPanelScript?.SetScreenshot(rt);
+
             StartCoroutine(ShowGameOverDelayed(finalScore));
         }
     }
@@ -18,22 +29,11 @@ public class GameOverTrigger : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
 
-        if (PanelManager.instance != null)
-        {
-            PanelManager.instance.ShowGameOver();
+        PanelManager.instance?.ShowGameOver();
 
-            if (PanelManager.instance.gameOverPanelScript != null)
-            {
-                PanelManager.instance.gameOverPanelScript.ShowScore(finalScore);
-            }
-            else
-            {
-                Debug.LogError("GameOverPanel script is not assigned in PanelManager.");
-            }
-        }
-        else
+        if (PanelManager.instance?.gameOverPanelScript != null)
         {
-            Debug.LogError("PanelManager.instance is null.");
+            PanelManager.instance.gameOverPanelScript.ShowScore(finalScore);
         }
     }
 }

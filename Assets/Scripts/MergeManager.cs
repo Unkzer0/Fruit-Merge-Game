@@ -10,8 +10,10 @@ public class MergeManager : MonoBehaviour
     [SerializeField] private float bounceScale = 1.2f;
     [SerializeField] private float bounceDuration = 0.2f;
     private bool sfxMuted = false;
+
     private void Awake()
     {
+   
         sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
 
         if (instance == null)
@@ -46,6 +48,10 @@ public class MergeManager : MonoBehaviour
         {
             GameObject newFruit = Instantiate(FruitSelector.instance.Fruits[nextIndex], spawnPos, Quaternion.identity);
             newFruit.transform.localScale = Vector3.one; // Always scale to 1,1,1
+
+            //  Unlock in UI if not already unlocked
+            FruitBarUIManager.instance?.UnlockFruit(fruitScript1.fruitIndex - FruitBarUIManager.instance.StartIndex);
+
 
             //  Play merge sound
             if (!sfxMuted && mergeSound != null)
@@ -112,7 +118,4 @@ public class MergeManager : MonoBehaviour
         if (target != null)
             target.localScale = originalScale;
     }
-
-
-
 }

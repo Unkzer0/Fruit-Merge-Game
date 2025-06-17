@@ -10,6 +10,8 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject comingsoonPanel;
+
 
     private void Awake()
     {
@@ -27,7 +29,8 @@ public class PanelManager : MonoBehaviour
     {
         return (mainMenuPanel.activeSelf ||
                 gameOverPanel.activeSelf ||
-                settingsPanel.activeSelf);
+                settingsPanel.activeSelf) ||
+                comingsoonPanel.activeSelf;
     }
 
     public void ShowOnly(GameObject panelToShow)
@@ -36,6 +39,7 @@ public class PanelManager : MonoBehaviour
         mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         settingsPanel.SetActive(false);
+        comingsoonPanel.SetActive(false);
 
         // Show requested panel
         if (panelToShow != null)
@@ -48,4 +52,5 @@ public class PanelManager : MonoBehaviour
     public void ShowMainMenu() => ShowOnly(mainMenuPanel);
     public void ShowGameOver() => ShowOnly(gameOverPanel);
     public void ShowSettings() => ShowOnly(settingsPanel);
+    public void ShowComingSoon() => ShowOnly(comingsoonPanel);
 }

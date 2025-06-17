@@ -72,15 +72,15 @@ public class FruitDropperController : MonoBehaviour
                 break;
 
             case TouchPhase.Ended:
-                float deltaTime = Time.time - lastTouchTime;
-                float swipeSpeed = (touch.position - lastTouchPosition).magnitude / deltaTime;
+                float swipeSpeed = (touch.position - lastTouchPosition).magnitude / (Time.time - lastTouchTime);
 
-                // Drop only on swipe or release
-                if (swipeSpeed > swipeDropThreshold || deltaTime > 0.05f)
+                // Allow drop even for slow release
+                if (swipeSpeed > swipeDropThreshold || (touch.position - lastTouchPosition).magnitude < 50f)
                 {
                     TryDropFruit();
                 }
                 break;
+
         }
     }
 

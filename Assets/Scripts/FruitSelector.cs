@@ -8,7 +8,6 @@ public class FruitSelector : MonoBehaviour
     public static FruitSelector instance;
     private float lastTouchTime;
 
-
     [Header("Fruit Prefabs")]
     public GameObject[] Fruits;
 
@@ -18,14 +17,14 @@ public class FruitSelector : MonoBehaviour
     [Header("Current & Next Fruit Display")]
     [SerializeField] private SpriteRenderer currentFruitSpriteRenderer;
     [SerializeField] private SpriteRenderer nextFruitSpriteRenderer;
-    [SerializeField] private Transform displayFollowTransform; 
+    [SerializeField] private Transform displayFollowTransform;
     [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
     [SerializeField] private float bobbingAmplitude = 0.1f;
     [SerializeField] private float bobbingSpeed = 2f;
-    
+
     [Header("Fruit Settings")]
     public int HighestStartingIndex = 3;
-    [SerializeField] private float[] weights;
+    [SerializeField] private Vector3[] nextFruitScales; // New: custom scale per fruit
 
     public GameObject CurrentFruit { get; private set; }
     public int CurrentFruitIndex { get; private set; }
@@ -43,7 +42,6 @@ public class FruitSelector : MonoBehaviour
 
     private void Start()
     {
-        ValidateWeights();
         InitFruitQueue();
         lastTouchTime = Time.time;
     }
@@ -64,7 +62,6 @@ public class FruitSelector : MonoBehaviour
 
             currentFruitSpriteRenderer.transform.position = position;
         }
-
     }
 
     public void NotifyTouch()
@@ -72,28 +69,25 @@ public class FruitSelector : MonoBehaviour
         lastTouchTime = Time.time;
     }
 
-
     private void InitFruitQueue()
     {
-        CurrentFruitIndex = GetWeightedRandomIndex();
+        CurrentFruitIndex = GetRandomIndex();
         CurrentFruit = Fruits[CurrentFruitIndex];
 
-        NextFruitIndex = GetWeightedRandomIndex();
+        NextFruitIndex = GetRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
         UpdateUI();
     }
 
-    
     public GameObject GetFruitToSpawn()
     {
         GameObject fruit = CurrentFruit;
 
-  
         CurrentFruitIndex = NextFruitIndex;
         CurrentFruit = Fruits[CurrentFruitIndex];
 
-        NextFruitIndex = GetWeightedRandomIndex();
+        NextFruitIndex = GetRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
         UpdateUI();
@@ -110,37 +104,19 @@ public class FruitSelector : MonoBehaviour
         if (nextFruitSpriteRenderer != null && fruitSprites.Length > NextFruitIndex)
         {
             nextFruitSpriteRenderer.sprite = fruitSprites[NextFruitIndex];
+
+            // Apply scale safely with Z = 1
+            if (nextFruitScales.Length > NextFruitIndex)
+            {
+                Vector3 scale = nextFruitScales[NextFruitIndex];
+                scale.z = 1f;
+                nextFruitSpriteRenderer.transform.localScale = scale;
+            }
         }
     }
 
-    private int GetWeightedRandomIndex()
+    private int GetRandomIndex()
     {
-        float totalWeight = 0f;
-        for (int i = 0; i <= HighestStartingIndex && i < weights.Length; i++)
-        {
-            totalWeight += weights[i];
-        }
-
-        float randomValue = Random.value * totalWeight;
-
-        for (int i = 0; i <= HighestStartingIndex && i < weights.Length; i++)
-        {
-            if (randomValue < weights[i])
-                return i;
-            randomValue -= weights[i];
-        }
-
-        return 0;
-    }
-
-    private void ValidateWeights()
-    {
-        if (weights == null || weights.Length < HighestStartingIndex + 1)
-        {
-            Debug.LogWarning("Weights not set properly. Applying default equal weights.");
-            weights = new float[HighestStartingIndex + 1];
-            for (int i = 0; i <= HighestStartingIndex; i++)
-                weights[i] = 1f;
-        }
+        return Random.Range(0, HighestStartingIndex + 1);
     }
 }
