@@ -8,7 +8,7 @@ public class MainMenuPanel : MonoBehaviour
     [SerializeField] private Button playButton;
 
     private void Start()
-    {
+    {   
         playButton.onClick.AddListener(() =>
         {
             PanelManager.instance.ShowOnly(null); // Hide all panels to start the game

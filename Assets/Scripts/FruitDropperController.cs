@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FruitDropperController : MonoBehaviour
 {
@@ -37,8 +38,8 @@ public class FruitDropperController : MonoBehaviour
 
     private void Update()
     {
-        // Prevent input if any panel is active
-        if (PanelManager.instance != null && PanelManager.instance.IsAnyPanelOpen())
+        // Block all input if any panel is open or just closed
+        if (PanelManager.AnyPanelOrJustClosed)
             return;
 
         HandleTouchInput();
@@ -49,12 +50,15 @@ public class FruitDropperController : MonoBehaviour
         }
     }
 
-
     private void HandleTouchInput()
     {
         if (Input.touchCount == 0) return;
 
         Touch touch = Input.GetTouch(0);
+
+        // Ignore touches that began over UI (like the Play button)
+        if (touch.phase == TouchPhase.Began && IsTouchOverUI(touch))
+            return;
 
         switch (touch.phase)
         {
@@ -74,14 +78,18 @@ public class FruitDropperController : MonoBehaviour
             case TouchPhase.Ended:
                 float swipeSpeed = (touch.position - lastTouchPosition).magnitude / (Time.time - lastTouchTime);
 
-                // Allow drop even for slow release
+                // Drop if fast swipe OR small movement (tap)
                 if (swipeSpeed > swipeDropThreshold || (touch.position - lastTouchPosition).magnitude < 50f)
                 {
                     TryDropFruit();
                 }
                 break;
-
         }
+    }
+
+    private bool IsTouchOverUI(Touch touch)
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId);
     }
 
     private void MoveToPoint(Vector2 screenPosition, bool instant)
@@ -125,7 +133,6 @@ public class FruitDropperController : MonoBehaviour
 
         canDrop = false;
 
-        // Play drop sound
         if (!sfxMuted && dropSound != null)
         {
             dropSound.Play();
@@ -148,3 +155,4 @@ public class FruitDropperController : MonoBehaviour
         canDrop = true;
     }
 }
+
