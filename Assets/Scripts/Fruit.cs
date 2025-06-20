@@ -6,37 +6,36 @@ public class Fruit : MonoBehaviour
 {
     public Action onSettled;
     public FruitData fruitData;
+
     [Header("Fruit Properties")]
-    public int fruitIndex; // Assigned when spawned
+    public int fruitIndex;
 
     private Rigidbody2D rb;
     private bool hasSettled = false;
     private bool isMerging = false;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Handle merge logic
+        // Attempt merge if colliding with another fruit
         if (!isMerging && collision.gameObject.CompareTag("Fruit"))
         {
             Fruit otherFruit = collision.gameObject.GetComponent<Fruit>();
-
             if (otherFruit != null && otherFruit.fruitIndex == fruitIndex && !otherFruit.isMerging)
             {
                 isMerging = true;
                 otherFruit.isMerging = true;
 
-                Vector3 mergePos = (transform.position + otherFruit.transform.position) / 2f;
-
-                // Call MergeManager to handle the merge
-                MergeManager.instance.MergeFruits(fruitIndex, transform.gameObject, otherFruit.gameObject, mergePos);
+                Vector3 mergePos = (transform.position + otherFruit.transform.position) * 0.5f;
+                MergeManager.instance?.MergeFruits(fruitIndex, gameObject, otherFruit.gameObject, mergePos);
             }
         }
 
+        // Trigger settle callback after first collision
         if (!hasSettled)
         {
             hasSettled = true;
@@ -47,6 +46,6 @@ public class Fruit : MonoBehaviour
     private void NotifySettled()
     {
         onSettled?.Invoke();
-        onSettled = null;
+        onSettled = null; // Ensure callback is not invoked multiple times
     }
 }

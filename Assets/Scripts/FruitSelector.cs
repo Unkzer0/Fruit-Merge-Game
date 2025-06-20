@@ -1,17 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FruitSelector : MonoBehaviour
 {
     public static FruitSelector instance;
-    private float lastTouchTime;
 
-    [Header("Fruit Prefabs")]
+    [Header("Fruit Prefabs & Sprites")]
     public GameObject[] Fruits;
-
-    [Header("Fruit Sprites")]
     [SerializeField] private Sprite[] fruitSprites;
 
     [Header("Current & Next Fruit Display")]
@@ -21,16 +16,18 @@ public class FruitSelector : MonoBehaviour
     [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
     [SerializeField] private float bobbingAmplitude = 0.1f;
     [SerializeField] private float bobbingSpeed = 2f;
+    [SerializeField] private Vector3[] nextFruitScales; // Scale overrides for next fruit display
 
     [Header("Fruit Settings")]
     public int HighestStartingIndex = 3;
-    [SerializeField] private Vector3[] nextFruitScales; // New: custom scale per fruit
 
     public GameObject CurrentFruit { get; private set; }
     public int CurrentFruitIndex { get; private set; }
 
     public GameObject NextFruit { get; private set; }
     public int NextFruitIndex { get; private set; }
+
+    private float lastTouchTime;
 
     private void Awake()
     {
@@ -42,26 +39,23 @@ public class FruitSelector : MonoBehaviour
 
     private void Start()
     {
-        InitFruitQueue();
         lastTouchTime = Time.time;
+        InitializeFruitQueue();
     }
 
     private void Update()
     {
-        if (displayFollowTransform != null && currentFruitSpriteRenderer != null)
+        if (displayFollowTransform == null || currentFruitSpriteRenderer == null) return;
+
+        Vector3 position = displayFollowTransform.position + offset;
+
+        // Bobbing effect if idle
+        if (Time.time - lastTouchTime > 10f)
         {
-            bool isIdle = Time.time - lastTouchTime > 10f;
-
-            Vector3 position = displayFollowTransform.position + offset;
-
-            if (isIdle)
-            {
-                Vector3 bobbing = new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
-                position += bobbing;
-            }
-
-            currentFruitSpriteRenderer.transform.position = position;
+            position += new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
         }
+
+        currentFruitSpriteRenderer.transform.position = position;
     }
 
     public void NotifyTouch()
@@ -69,7 +63,7 @@ public class FruitSelector : MonoBehaviour
         lastTouchTime = Time.time;
     }
 
-    private void InitFruitQueue()
+    private void InitializeFruitQueue()
     {
         CurrentFruitIndex = GetRandomIndex();
         CurrentFruit = Fruits[CurrentFruitIndex];
@@ -84,9 +78,11 @@ public class FruitSelector : MonoBehaviour
     {
         GameObject fruit = CurrentFruit;
 
+        // Shift next fruit to current
         CurrentFruitIndex = NextFruitIndex;
         CurrentFruit = Fruits[CurrentFruitIndex];
 
+        // Pick new next
         NextFruitIndex = GetRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
@@ -96,27 +92,25 @@ public class FruitSelector : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (currentFruitSpriteRenderer != null && fruitSprites.Length > CurrentFruitIndex)
-        {
+        if (fruitSprites.Length > CurrentFruitIndex)
             currentFruitSpriteRenderer.sprite = fruitSprites[CurrentFruitIndex];
-        }
 
-        if (nextFruitSpriteRenderer != null && fruitSprites.Length > NextFruitIndex)
+        if (fruitSprites.Length > NextFruitIndex)
         {
             nextFruitSpriteRenderer.sprite = fruitSprites[NextFruitIndex];
 
-            // Apply scale safely with Z = 1
-            if (nextFruitScales.Length > NextFruitIndex)
+            // Apply consistent scaling with z = 1
+            if (nextFruitScales != null && nextFruitScales.Length > NextFruitIndex)
             {
-                Vector3 scale = nextFruitScales[NextFruitIndex];
-                scale.z = 1f;
-                nextFruitSpriteRenderer.transform.localScale = scale;
+                Vector3 fixedScale = nextFruitScales[NextFruitIndex];
+                fixedScale.z = 1f;
+                nextFruitSpriteRenderer.transform.localScale = fixedScale;
             }
         }
     }
 
     private int GetRandomIndex()
     {
-        return Random.Range(0, HighestStartingIndex + 1);
+        return Random.Range(0, Mathf.Min(HighestStartingIndex + 1, Fruits.Length));
     }
 }

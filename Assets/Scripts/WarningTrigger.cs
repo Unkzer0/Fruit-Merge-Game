@@ -1,18 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class WarningTrigger : MonoBehaviour
 {
     [SerializeField] private WarningLineController warningLine;
+    [SerializeField] private float warningDelay = 5f;
+
     private Coroutine warningCoroutine;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Fruit"))
         {
-            // Start delayed warning check
-            warningCoroutine = StartCoroutine(StartWarningAfterDelay(other));
+            // Start delayed warning if not already running
+            if (warningCoroutine == null)
+                warningCoroutine = StartCoroutine(DelayedWarning(other));
         }
     }
 
@@ -20,7 +23,7 @@ public class WarningTrigger : MonoBehaviour
     {
         if (other.CompareTag("Fruit"))
         {
-            // Cancel if the fruit exits early
+            // Cancel ongoing coroutine if the fruit exits early
             if (warningCoroutine != null)
             {
                 StopCoroutine(warningCoroutine);
@@ -29,27 +32,24 @@ public class WarningTrigger : MonoBehaviour
         }
     }
 
-    private IEnumerator StartWarningAfterDelay(Collider2D fruit)
+    private IEnumerator DelayedWarning(Collider2D fruit)
     {
-        float delay = 5f;
         float elapsed = 0f;
+        Collider2D trigger = GetComponent<Collider2D>();
 
-        // Wait only if the same fruit stays in the trigger
-        while (elapsed < delay)
+        while (elapsed < warningDelay)
         {
-            if (!IsFruitStillTouching(fruit))
-                yield break; // Fruit exited early, cancel
+            if (!trigger.bounds.Intersects(fruit.bounds))
+            {
+                warningCoroutine = null;
+                yield break; // Fruit exited early
+            }
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         warningLine?.TriggerWarningBlink();
-    }
-
-    private bool IsFruitStillTouching(Collider2D fruit)
-    {
-        // Check if the fruit is still overlapping
-        return GetComponent<Collider2D>().bounds.Intersects(fruit.bounds);
+        warningCoroutine = null;
     }
 }

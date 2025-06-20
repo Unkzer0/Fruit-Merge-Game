@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class AimLineController : MonoBehaviour
 {
-    [SerializeField] private Transform dropper;    // Reference to fruit dropper
-    [SerializeField] private float bottomY = -4f;  // Y position where line ends
+    [SerializeField] private Transform dropper;   // Reference to the fruit dropper
+    [SerializeField] private float bottomY = -4f; // Y position where line ends
 
     private LineRenderer lineRenderer;
 
@@ -14,15 +15,13 @@ public class AimLineController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (dropper == null) return;
+        if (!dropper) return;
 
-        // Update the start and end points of the line
-        Vector3 start = new Vector3(dropper.position.x, dropper.position.y, 0f);
-        Vector3 end = new Vector3(dropper.position.x, bottomY, 0f);
-
-        lineRenderer.SetPosition(0, start);
-        lineRenderer.SetPosition(1, end);
+        Vector3 dropperPos = dropper.position;
+        lineRenderer.SetPosition(0, new Vector3(dropperPos.x, dropperPos.y, 0f));
+        lineRenderer.SetPosition(1, new Vector3(dropperPos.x, bottomY, 0f));
     }
 }
+

@@ -1,31 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class ScreenshotUtility
 {
-   
-        public static RenderTexture CaptureCustomArea(Camera cam, int width, int height, int antiAliasing = 2)
+    /// <summary>
+    /// Captures a screenshot from a specific camera into a RenderTexture.
+    /// </summary>
+    public static RenderTexture CaptureCustomArea(Camera cam, int width, int height, int antiAliasing = 2)
+    {
+        if (cam == null)
         {
-            RenderTexture rt = new RenderTexture(width, height, 24);
-            rt.antiAliasing = antiAliasing;
-
-            RenderTexture currentRT = RenderTexture.active;
-            cam.targetTexture = rt;
-            RenderTexture.active = rt;
-
-            cam.Render(); // Render manually
-
-            cam.targetTexture = null;
-            RenderTexture.active = currentRT;
-
-            return rt;
+            Debug.LogError("ScreenshotUtility: Camera is null.");
+            return null;
         }
-    
 
-    // Optional: Convert to Texture2D
+        RenderTexture rt = new RenderTexture(width, height, 24)
+        {
+            antiAliasing = antiAliasing
+        };
+
+        RenderTexture currentRT = RenderTexture.active;
+
+        cam.targetTexture = rt;
+        RenderTexture.active = rt;
+
+        cam.Render();
+
+        cam.targetTexture = null;
+        RenderTexture.active = currentRT;
+
+        return rt;
+    }
+
+    /// <summary>
+    /// Converts a RenderTexture to a Texture2D.
+    /// </summary>
     public static Texture2D ConvertToTexture2D(RenderTexture rt)
     {
+        if (rt == null)
+        {
+            Debug.LogError("ScreenshotUtility: RenderTexture is null.");
+            return null;
+        }
+
         RenderTexture currentRT = RenderTexture.active;
         RenderTexture.active = rt;
 
@@ -37,5 +53,3 @@ public static class ScreenshotUtility
         return tex;
     }
 }
-
-

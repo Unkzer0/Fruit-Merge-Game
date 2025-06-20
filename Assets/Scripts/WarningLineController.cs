@@ -1,51 +1,49 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class WarningLineController : MonoBehaviour
 {
-        private LineRenderer lineRenderer;
-        private Coroutine blinkCoroutine;
+    private LineRenderer lineRenderer;
+    private Coroutine blinkCoroutine;
 
-        private void Awake()
-        {
-            lineRenderer = GetComponent<LineRenderer>();
-            SetupLine();
-        }
+    [Header("Blink Settings")]
+    [SerializeField] private Color warningColor = new Color(1f, 0f, 0f, 1f);      // Red
+    [SerializeField] private Color transparentColor = new Color(1f, 0f, 0f, 0f);  // Invisible
+    [SerializeField] private int blinkCount = 6;
+    [SerializeField] private float blinkInterval = 0.2f;
 
-        private void SetupLine()
-        {
-            SetLineColor(new Color(1, 0, 0, 0));
-        }
-
-        private void SetLineColor(Color c)
-        {
-            lineRenderer.startColor = c;
-            lineRenderer.endColor = c;
-        }
-
-        public void TriggerWarningBlink()
-        {
-            if (blinkCoroutine != null)
-                StopCoroutine(blinkCoroutine);
-
-            blinkCoroutine = StartCoroutine(BlinkLine());
-        }
-
-        private IEnumerator BlinkLine()
-        {
-            Color visible = new Color(1, 0, 0, 1);   // Red
-            Color transparent = new Color(1, 0, 0, 0); // Transparent
-
-            for (int i = 0; i < 6; i++)
-            {
-                SetLineColor(visible);
-                yield return new WaitForSeconds(0.2f);
-                SetLineColor(transparent);
-                yield return new WaitForSeconds(0.2f);
-            }
-
-            SetLineColor(transparent);
-            blinkCoroutine = null;
-        }
+    private void Awake()
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+        SetLineColor(transparentColor);
     }
+
+    private void SetLineColor(Color color)
+    {
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+    }
+
+    public void TriggerWarningBlink()
+    {
+        if (blinkCoroutine != null)
+            StopCoroutine(blinkCoroutine);
+
+        blinkCoroutine = StartCoroutine(BlinkLine());
+    }
+
+    private IEnumerator BlinkLine()
+    {
+        for (int i = 0; i < blinkCount; i++)
+        {
+            SetLineColor(warningColor);
+            yield return new WaitForSeconds(blinkInterval);
+            SetLineColor(transparentColor);
+            yield return new WaitForSeconds(blinkInterval);
+        }
+
+        SetLineColor(transparentColor);
+        blinkCoroutine = null;
+    }
+}

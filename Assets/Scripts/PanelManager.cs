@@ -9,8 +9,8 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject comingsoonPanel;
-    [SerializeField] private GameObject comingsoonformainmenu;
+    [SerializeField] private GameObject comingSoonPanel;
+    [SerializeField] private GameObject comingSoonForMainMenu;
 
     private bool justClosedPanel = false;
     private static bool hasLaunchedOnce = false;
@@ -30,19 +30,17 @@ public class PanelManager : MonoBehaviour
         if (!hasLaunchedOnce)
         {
             hasLaunchedOnce = true;
-            ShowOnly(mainMenuPanel); // Show only on first game launch
+            ShowOnly(mainMenuPanel);  // First launch: show main menu
         }
         else
         {
-            ShowOnly(null); // No panel on restart
+            ShowOnly(null);           // On restart: no panels
         }
     }
 
-
-
     private void LateUpdate()
     {
-        justClosedPanel = false; // Reset after each frame
+        justClosedPanel = false; // Reset each frame
     }
 
     public bool IsAnyPanelOpen()
@@ -50,8 +48,8 @@ public class PanelManager : MonoBehaviour
         return mainMenuPanel.activeSelf ||
                gameOverPanel.activeSelf ||
                settingsPanel.activeSelf ||
-               comingsoonPanel.activeSelf||
-               comingsoonformainmenu.activeSelf;
+               comingSoonPanel.activeSelf ||
+               comingSoonForMainMenu.activeSelf;
     }
 
     public static bool AnyPanelOrJustClosed =>
@@ -59,24 +57,26 @@ public class PanelManager : MonoBehaviour
 
     public void ShowOnly(GameObject panelToShow)
     {
-        // Hide all panels
-        mainMenuPanel.SetActive(false);
-        gameOverPanel.SetActive(false);
-        settingsPanel.SetActive(false);
-        comingsoonPanel.SetActive(false);
-        comingsoonformainmenu.SetActive(false);
-
-        justClosedPanel = true; // Delay input for 1 frame
+        HideAllPanels();
+        justClosedPanel = true;
 
         if (panelToShow != null)
             panelToShow.SetActive(true);
     }
 
-    // Helpers
+    private void HideAllPanels()
+    {
+        mainMenuPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        settingsPanel.SetActive(false);
+        comingSoonPanel.SetActive(false);
+        comingSoonForMainMenu.SetActive(false);
+    }
+
+    // Panel Shortcuts
     public void ShowMainMenu() => ShowOnly(mainMenuPanel);
     public void ShowGameOver() => ShowOnly(gameOverPanel);
     public void ShowSettings() => ShowOnly(settingsPanel);
-    public void ShowComingSoon() => ShowOnly(comingsoonPanel);
-    public void showComingSoonformainmenu() => ShowOnly(comingsoonformainmenu);
+    public void ShowComingSoon() => ShowOnly(comingSoonPanel);
+    public void ShowComingSoonFromMainMenu() => ShowOnly(comingSoonForMainMenu);
 }
-

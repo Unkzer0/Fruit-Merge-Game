@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,39 +9,32 @@ public class FruitDropperController : MonoBehaviour
     [SerializeField] private float minX = -2.5f;
     [SerializeField] private float maxX = 2.5f;
 
-    [Header("Fruit Drop Settings")]
+    [Header("Drop Settings")]
     [SerializeField] private Transform dropSpawnPoint;
     [SerializeField] private float dropCooldown = 0.5f;
-    [SerializeField] private float swipeDropThreshold = 1000f; // Pixels/second
-    [SerializeField] private AudioSource dropSound; // Assign a drop sound here
+    [SerializeField] private float swipeDropThreshold = 100f;
+    [SerializeField] private AudioSource dropSound;
 
-    private bool sfxMuted = false;
     private Camera mainCam;
-    private bool isDragging = false;
     private Vector3 targetPos;
     private bool canDrop = true;
+    private bool isDragging = false;
+    private bool sfxMuted;
 
-    private Vector2 lastTouchPosition;
+    private Vector2 lastTouchPos;
     private float lastTouchTime;
 
     private void Awake()
     {
         sfxMuted = PlayerPrefs.GetInt("SFXMuted", 0) == 1;
-    }
-
-    private void Start()
-    {
         mainCam = Camera.main;
         targetPos = transform.position;
     }
 
     private void Update()
     {
-        // Block all input if any panel is open or just closed
-        if (PanelManager.AnyPanelOrJustClosed)
-            return;
-
-        HandleTouchInput();
+        if (PanelManager.AnyPanelOrJustClosed) return;
+        HandleTouch();
 
         if (isDragging)
         {
@@ -50,85 +42,77 @@ public class FruitDropperController : MonoBehaviour
         }
     }
 
-    private void HandleTouchInput()
+    private void HandleTouch()
     {
         if (Input.touchCount == 0) return;
 
         Touch touch = Input.GetTouch(0);
 
-        // Ignore touches that began over UI (like the Play button)
-        if (touch.phase == TouchPhase.Began && IsTouchOverUI(touch))
-            return;
+        if (touch.phase == TouchPhase.Began && IsPointerOverUI()) return;
 
         switch (touch.phase)
         {
             case TouchPhase.Began:
-                lastTouchPosition = touch.position;
+                lastTouchPos = touch.position;
                 lastTouchTime = Time.time;
                 FruitSelector.instance?.NotifyTouch();
-                MoveToPoint(touch.position, instant: true);
+                MoveTo(touch.position, true);
                 break;
 
             case TouchPhase.Moved:
             case TouchPhase.Stationary:
                 FruitSelector.instance?.NotifyTouch();
-                MoveToPoint(touch.position, instant: false);
+                MoveTo(touch.position, false);
                 break;
 
             case TouchPhase.Ended:
-                float swipeSpeed = (touch.position - lastTouchPosition).magnitude / (Time.time - lastTouchTime);
+                float delta = (touch.position - lastTouchPos).magnitude;
+                float speed = delta / (Time.time - lastTouchTime);
 
-                // Drop if fast swipe OR small movement (tap)
-                if (swipeSpeed > swipeDropThreshold || (touch.position - lastTouchPosition).magnitude < 50f)
+                if (speed > swipeDropThreshold || delta < 50f)
                 {
-                    TryDropFruit();
+                    TryDrop();
                 }
                 break;
         }
     }
 
-    private bool IsTouchOverUI(Touch touch)
+    private void MoveTo(Vector2 screenPos, bool instant)
     {
-        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId);
-    }
+        if (mainCam == null) return;
 
-    private void MoveToPoint(Vector2 screenPosition, bool instant)
-    {
-        Vector3 screenPoint = new Vector3(screenPosition.x, screenPosition.y, mainCam.WorldToScreenPoint(transform.position).z);
+        Vector3 screenPoint = new Vector3(screenPos.x, screenPos.y, mainCam.WorldToScreenPoint(transform.position).z);
         Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPoint);
+
         float clampedX = Mathf.Clamp(worldPos.x, minX, maxX);
-        Vector3 newTargetPos = new Vector3(clampedX, transform.position.y, transform.position.z);
+        Vector3 newPos = new Vector3(clampedX, transform.position.y, transform.position.z);
 
         if (instant)
         {
-            transform.position = newTargetPos;
+            transform.position = newPos;
             isDragging = false;
         }
         else
         {
-            targetPos = newTargetPos;
+            targetPos = newPos;
             isDragging = true;
         }
     }
-
-    public void SetCanDrop(bool value)
+    private bool IsPointerOverUI()
     {
-        canDrop = value;
+#if UNITY_EDITOR
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+#else
+    return EventSystem.current != null && Input.touchCount > 0 &&
+           EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+#endif
     }
 
-    public void ToggleSFX()
-    {
-        sfxMuted = !sfxMuted;
-        PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
-    }
-
-    public bool IsSFXMuted() => sfxMuted;
-
-    private void TryDropFruit()
+    private void TryDrop()
     {
         if (!canDrop || FruitSelector.instance == null) return;
 
-        Vector3 spawnPos = dropSpawnPoint != null ? dropSpawnPoint.position : transform.position;
+        Vector3 spawnPos = dropSpawnPoint ? dropSpawnPoint.position : transform.position;
         GameObject fruit = Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
 
         canDrop = false;
@@ -141,7 +125,7 @@ public class FruitDropperController : MonoBehaviour
         Fruit fruitScript = fruit.GetComponent<Fruit>();
         if (fruitScript != null)
         {
-            fruitScript.onSettled = () => { StartCoroutine(EnableDropAfterDelay()); };
+            fruitScript.onSettled = () => StartCoroutine(EnableDropAfterDelay());
         }
         else
         {
@@ -154,5 +138,13 @@ public class FruitDropperController : MonoBehaviour
         yield return new WaitForSeconds(dropCooldown);
         canDrop = true;
     }
-}
 
+    public void ToggleSFX()
+    {
+        sfxMuted = !sfxMuted;
+        PlayerPrefs.SetInt("SFXMuted", sfxMuted ? 1 : 0);
+    }
+
+    public bool IsSFXMuted() => sfxMuted;
+    public void SetCanDrop(bool value) => canDrop = value;
+}

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -10,21 +8,20 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private RawImage screenshotDisplay;
     [SerializeField] private Button restartButton;
-    [SerializeField] private Button shareButton;
 
     private RenderTexture capturedScreenshot;
 
     public void ShowScore(int score)
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + score;
+            scoreText.text = $"Score: {score}";
     }
 
     public void SetScreenshot(RenderTexture rt)
     {
         capturedScreenshot = rt;
 
-        if (screenshotDisplay != null)
+        if (screenshotDisplay != null && rt != null)
         {
             screenshotDisplay.texture = capturedScreenshot;
         }
@@ -34,21 +31,12 @@ public class GameOverPanel : MonoBehaviour
     {
         if (restartButton != null)
         {
-            restartButton.onClick.AddListener(() =>
-            {
-                SceneManager.LoadScene(0);
-            });
-        }
-
-        if (shareButton != null)
-        {
-            shareButton.onClick.AddListener(ShareScreenshot);
+            restartButton.onClick.AddListener(RestartGame);
         }
     }
 
-    private void ShareScreenshot()
+    private void RestartGame()
     {
-        Debug.Log("Share button clicked. Screenshot sharing logic goes here.");
-        // Optional: Implement screenshot saving + native share intent (for mobile)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

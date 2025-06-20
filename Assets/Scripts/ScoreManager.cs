@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,9 +5,9 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance;
 
-    [Header("UI")]
-    [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] TextMeshProUGUI highScoreText;
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     private int currentScore = 0;
     private int highScore = 0;
@@ -27,10 +25,6 @@ public class ScoreManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         UpdateScoreUI();
     }
-    public int GetCurrentScore()
-    {
-        return currentScore;
-    }
 
     public void AddScore(int points)
     {
@@ -47,9 +41,16 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreUI()
     {
-        if (scoreText != null) scoreText.text = ""+ currentScore;
-        if (highScoreText != null) highScoreText.text = highScore + "  HIGHSCORE";
+        if (scoreText != null)
+            scoreText.text = currentScore.ToString();
+
+        if (highScoreText != null)
+            highScoreText.text = $"{highScore}  HIGHSCORE";
     }
+
+    public int GetCurrentScore() => currentScore;
+
+    public int GetHighScore() => highScore;
 
     public void ResetScore()
     {

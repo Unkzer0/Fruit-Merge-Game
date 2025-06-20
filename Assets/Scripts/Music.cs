@@ -1,29 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class Music : MonoBehaviour
 {
     public static Music instance;
 
     private AudioSource audioSource;
-    private bool isMuted = false;
+    private bool isMuted;
 
     private void Awake()
     {
-        if (instance == null)
+        if (instance != null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // Makes it persist between scenes
-        }
-        else
-        {
-            Destroy(gameObject); // Only one allowed
+            Destroy(gameObject);
             return;
         }
 
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+
         audioSource = GetComponent<AudioSource>();
+
         isMuted = PlayerPrefs.GetInt("MusicMuted", 0) == 1;
         ApplyMuteState();
     }
@@ -38,9 +35,7 @@ public class Music : MonoBehaviour
     private void ApplyMuteState()
     {
         if (audioSource != null)
-        {
             audioSource.mute = isMuted;
-        }
     }
 
     public bool IsMusicMuted() => isMuted;
