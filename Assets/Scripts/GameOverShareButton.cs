@@ -9,16 +9,27 @@ public class GameOverShareButton : MonoBehaviour
     public Button shareButton;
     public ScoreManager scoreManager;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip buttonClickSound;
+
     private bool isProcessing = false;
     private bool isFocus = false;
 
     private void Start()
     {
         if (shareButton != null)
-            shareButton.onClick.AddListener(ShareText);
-
-        if (scoreManager == null)
-            Debug.LogError("ScoreManager not assigned in GameOverShareButton.");
+            shareButton.onClick.AddListener(() =>
+            {
+                PlayClickSound();
+                ShareText(); 
+            }); ;
+    }
+    private void PlayClickSound()
+    {
+        if (buttonClickSound != null && Camera.main != null)
+        {
+            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+        }
     }
 
     private void OnApplicationFocus(bool focus)

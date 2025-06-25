@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using System.Collections;
 public class SettingsPanel : MonoBehaviour
 {
     [Header("Buttons")]
@@ -53,6 +53,12 @@ public class SettingsPanel : MonoBehaviour
     private void RestartGame()
     {
         PlayClickSound();
+        StartCoroutine(RestartAfterDelay(0.4f)); // Delay to let the sound play
+    }
+
+    private IEnumerator RestartAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
