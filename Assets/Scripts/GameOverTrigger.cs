@@ -17,6 +17,7 @@ public class GameOverTrigger : MonoBehaviour
 
         Destroy(other.gameObject);
 
+        // Capture Screenshot if camera is assigned
         if (screenshotCamera != null)
         {
             screenshotCamera.enabled = true;
@@ -30,23 +31,20 @@ public class GameOverTrigger : MonoBehaviour
 
             screenshotCamera.enabled = false;
 
-            if (PanelManager.instance?.gameOverPanelScript != null)
-            {
-                PanelManager.instance.gameOverPanelScript.SetScreenshot(rt);
-            }
+            PanelManager.instance?.gameOverPanelScript?.SetScreenshot(rt);
         }
 
-        StartCoroutine(ShowGameOverDelayed(finalScore));
+        StartCoroutine(ShowGameOverDelayed());
     }
 
-    private IEnumerator ShowGameOverDelayed(int score)
+    private IEnumerator ShowGameOverDelayed()
     {
         yield return new WaitForSeconds(5f);
 
         if (PanelManager.instance != null)
         {
             PanelManager.instance.ShowGameOver();
-            PanelManager.instance.gameOverPanelScript?.ShowScore(score);
+            PanelManager.instance.gameOverPanelScript?.ShowScore();
         }
     }
 }

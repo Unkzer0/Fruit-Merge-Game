@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 6
   m_Sprite: {fileID: 21300000, guid: 61b9e931e455b7c408901c9bf499bf95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -112,7 +112,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &2393514445651921723
 MonoBehaviour:
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fruitData: {fileID: 11400000, guid: 0b07a2815e303e040867048bb221197c, type: 2}
   fruitIndex: 0
+  isMerging: 0
 --- !u!58 &4491517145199005495
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -160,6 +161,6 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0047167838, y: -0.07235837}
+  m_Offset: {x: -0.0036988258, y: -0.063477755}
   serializedVersion: 2
-  m_Radius: 0.18
+  m_Radius: 0.1899246

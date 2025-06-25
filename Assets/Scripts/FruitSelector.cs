@@ -1,29 +1,29 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FruitSelector : MonoBehaviour
 {
     public static FruitSelector instance;
 
-    [Header("Fruit Prefabs & Sprites")]
+    [Header("Fruit Prefabs")]
     public GameObject[] Fruits;
-    [SerializeField] private Sprite[] fruitSprites;
 
-    [Header("Current & Next Fruit Display")]
+    [Header("UI Display")]
+    [SerializeField] private Sprite[] fruitSprites;               // For current fruit
+    [SerializeField] private Sprite[] nextFruitSprites;           // NEW: For UI next fruit
     [SerializeField] private SpriteRenderer currentFruitSpriteRenderer;
-    [SerializeField] private SpriteRenderer nextFruitSpriteRenderer;
+    [SerializeField] private Image nextFruitUIImage;              // NEW: UI Image on canvas
+
     [SerializeField] private Transform displayFollowTransform;
     [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
     [SerializeField] private float bobbingAmplitude = 0.1f;
     [SerializeField] private float bobbingSpeed = 2f;
-    [SerializeField] private Vector3[] nextFruitScales; // Scale overrides for next fruit display
 
     [Header("Fruit Settings")]
     public int HighestStartingIndex = 3;
 
     public GameObject CurrentFruit { get; private set; }
     public int CurrentFruitIndex { get; private set; }
-
     public GameObject NextFruit { get; private set; }
     public int NextFruitIndex { get; private set; }
 
@@ -49,7 +49,6 @@ public class FruitSelector : MonoBehaviour
 
         Vector3 position = displayFollowTransform.position + offset;
 
-        // Bobbing effect if idle
         if (Time.time - lastTouchTime > 10f)
         {
             position += new Vector3(0, Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmplitude, 0);
@@ -78,11 +77,9 @@ public class FruitSelector : MonoBehaviour
     {
         GameObject fruit = CurrentFruit;
 
-        // Shift next fruit to current
         CurrentFruitIndex = NextFruitIndex;
         CurrentFruit = Fruits[CurrentFruitIndex];
 
-        // Pick new next
         NextFruitIndex = GetRandomIndex();
         NextFruit = Fruits[NextFruitIndex];
 
@@ -92,20 +89,15 @@ public class FruitSelector : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (fruitSprites.Length > CurrentFruitIndex)
-            currentFruitSpriteRenderer.sprite = fruitSprites[CurrentFruitIndex];
-
-        if (fruitSprites.Length > NextFruitIndex)
+        if (fruitSprites.Length > CurrentFruitIndex && currentFruitSpriteRenderer != null)
         {
-            nextFruitSpriteRenderer.sprite = fruitSprites[NextFruitIndex];
+            currentFruitSpriteRenderer.sprite = fruitSprites[CurrentFruitIndex];
+        }
 
-            // Apply consistent scaling with z = 1
-            if (nextFruitScales != null && nextFruitScales.Length > NextFruitIndex)
-            {
-                Vector3 fixedScale = nextFruitScales[NextFruitIndex];
-                fixedScale.z = 1f;
-                nextFruitSpriteRenderer.transform.localScale = fixedScale;
-            }
+        if (nextFruitSprites.Length > NextFruitIndex && nextFruitUIImage != null)
+        {
+            nextFruitUIImage.sprite = nextFruitSprites[NextFruitIndex];
+          
         }
     }
 

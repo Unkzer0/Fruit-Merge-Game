@@ -34,6 +34,7 @@ public class FruitDropperController : MonoBehaviour
     private void Update()
     {
         if (PanelManager.AnyPanelOrJustClosed) return;
+
         HandleTouch();
 
         if (isDragging)
@@ -48,7 +49,7 @@ public class FruitDropperController : MonoBehaviour
 
         Touch touch = Input.GetTouch(0);
 
-        if (touch.phase == TouchPhase.Began && IsPointerOverUI()) return;
+        if (touch.phase == TouchPhase.Began && IsPointerOverUI(touch.fingerId)) return;
 
         switch (touch.phase)
         {
@@ -98,13 +99,13 @@ public class FruitDropperController : MonoBehaviour
             isDragging = true;
         }
     }
-    private bool IsPointerOverUI()
+
+    private bool IsPointerOverUI(int fingerId)
     {
 #if UNITY_EDITOR
         return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 #else
-    return EventSystem.current != null && Input.touchCount > 0 &&
-           EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
 #endif
     }
 
@@ -113,7 +114,7 @@ public class FruitDropperController : MonoBehaviour
         if (!canDrop || FruitSelector.instance == null) return;
 
         Vector3 spawnPos = dropSpawnPoint ? dropSpawnPoint.position : transform.position;
-        GameObject fruit = Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
+        Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
 
         canDrop = false;
 
@@ -122,15 +123,7 @@ public class FruitDropperController : MonoBehaviour
             dropSound.Play();
         }
 
-        Fruit fruitScript = fruit.GetComponent<Fruit>();
-        if (fruitScript != null)
-        {
-            fruitScript.onSettled = () => StartCoroutine(EnableDropAfterDelay());
-        }
-        else
-        {
-            StartCoroutine(EnableDropAfterDelay());
-        }
+        StartCoroutine(EnableDropAfterDelay());
     }
 
     public IEnumerator EnableDropAfterDelay()
@@ -146,5 +139,6 @@ public class FruitDropperController : MonoBehaviour
     }
 
     public bool IsSFXMuted() => sfxMuted;
+
     public void SetCanDrop(bool value) => canDrop = value;
 }

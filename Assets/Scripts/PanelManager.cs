@@ -9,8 +9,10 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject settingsOnMainMenuPanel;
     [SerializeField] private GameObject comingSoonPanel;
-    [SerializeField] private GameObject comingSoonForMainMenu;
+    [SerializeField] private GameObject comingSoonForMainMenuPanel;
+    [SerializeField] private AudioClip buttonClickSound;
 
     private bool justClosedPanel = false;
     private static bool hasLaunchedOnce = false;
@@ -43,13 +45,22 @@ public class PanelManager : MonoBehaviour
         justClosedPanel = false; // Reset each frame
     }
 
+    private void PlayClickSound()
+    {
+        if (buttonClickSound != null)
+        {
+            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+        }
+    }
+
     public bool IsAnyPanelOpen()
     {
         return mainMenuPanel.activeSelf ||
                gameOverPanel.activeSelf ||
                settingsPanel.activeSelf ||
                comingSoonPanel.activeSelf ||
-               comingSoonForMainMenu.activeSelf;
+               settingsOnMainMenuPanel.activeSelf ||
+               comingSoonForMainMenuPanel.activeSelf;
     }
 
     public static bool AnyPanelOrJustClosed =>
@@ -70,13 +81,15 @@ public class PanelManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         settingsPanel.SetActive(false);
         comingSoonPanel.SetActive(false);
-        comingSoonForMainMenu.SetActive(false);
+        settingsOnMainMenuPanel.SetActive(false);
+        comingSoonForMainMenuPanel.SetActive(false);
     }
 
     // Panel Shortcuts
-    public void ShowMainMenu() => ShowOnly(mainMenuPanel);
-    public void ShowGameOver() => ShowOnly(gameOverPanel);
-    public void ShowSettings() => ShowOnly(settingsPanel);
-    public void ShowComingSoon() => ShowOnly(comingSoonPanel);
-    public void ShowComingSoonFromMainMenu() => ShowOnly(comingSoonForMainMenu);
+    public void ShowMainMenu() { PlayClickSound(); ShowOnly(mainMenuPanel); }
+    public void ShowGameOver() { ShowOnly(gameOverPanel); }
+    public void ShowSettings() { PlayClickSound(); ShowOnly(settingsPanel); }
+    public void ShowSettingOnMainMenu() { PlayClickSound(); ShowOnly(settingsOnMainMenuPanel); }
+    public void ShowComingSoon() { PlayClickSound(); ShowOnly(comingSoonPanel); }
+    public void ShowComingSoonFromMainMenu() { PlayClickSound(); ShowOnly(comingSoonForMainMenuPanel); }
 }

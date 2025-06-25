@@ -8,6 +8,8 @@ public class ScoreManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
+ 
+
 
     private int currentScore = 0;
     private int highScore = 0;
@@ -34,6 +36,7 @@ public class ScoreManager : MonoBehaviour
         {
             highScore = currentScore;
             PlayerPrefs.SetInt("HighScore", highScore);
+            PlayerPrefs.Save(); // Ensure it is immediately written to disk
         }
 
         UpdateScoreUI();
@@ -45,7 +48,7 @@ public class ScoreManager : MonoBehaviour
             scoreText.text = currentScore.ToString();
 
         if (highScoreText != null)
-            highScoreText.text = $"{highScore}  HIGHSCORE";
+            highScoreText.text = $"{highScore}";
     }
 
     public int GetCurrentScore() => currentScore;

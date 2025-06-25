@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MergeManager : MonoBehaviour
@@ -11,6 +12,8 @@ public class MergeManager : MonoBehaviour
     [SerializeField] private float bounceDuration = 0.2f;
 
     private bool sfxMuted;
+    private Queue<MergeRequest> mergeQueue = new Queue<MergeRequest>();
+    private bool isMerging = false;
 
     private void Awake()
     {
@@ -33,51 +36,75 @@ public class MergeManager : MonoBehaviour
 
     public bool IsSFXMuted() => sfxMuted;
 
-    public void MergeFruits(int currentIndex, GameObject fruit1, GameObject fruit2, Vector3 spawnPos)
+    // Called from Fruit.cs
+    public void QueueMergeRequest(int fruitIndex, GameObject fruit1, GameObject fruit2, Vector3 mergePosition)
     {
         if (fruit1 == null || fruit2 == null) return;
 
-        // Award score
-        Fruit fruitScript1 = fruit1.GetComponent<Fruit>();
-        if (fruitScript1?.fruitData != null)
+        // Always enqueue the merge
+        mergeQueue.Enqueue(new MergeRequest
         {
-            ScoreManager.instance?.AddScore(fruitScript1.fruitData.scoreValue);
+            index = fruitIndex,
+            fruitA = fruit1,
+            fruitB = fruit2,
+            position = mergePosition
+        });
+
+        // Start processing if not already
+        if (!isMerging)
+        {
+            StartCoroutine(ProcessMergeQueue());
         }
+    }
 
-        // Destroy merged fruits
-        Destroy(fruit1);
-        Destroy(fruit2);
+    private IEnumerator ProcessMergeQueue()
+    {
+        isMerging = true;
 
-        // Spawn new merged fruit
-        int nextIndex = currentIndex + 1;
-        if (FruitSelector.instance == null || nextIndex >= FruitSelector.instance.Fruits.Length) return;
-
-        GameObject newFruit = Instantiate(FruitSelector.instance.Fruits[nextIndex], spawnPos, Quaternion.identity);
-        newFruit.transform.localScale = Vector3.one;
-
-        // Unlock in fruit progression UI
-        FruitBarUIManager.instance?.UnlockFruit(fruitScript1.fruitIndex - FruitBarUIManager.instance.StartIndex);
-
-        // Play sound
-        if (!sfxMuted && mergeSound != null)
+        while (mergeQueue.Count > 0)
         {
-            AudioSource.PlayClipAtPoint(mergeSound, spawnPos);
-        }
+            MergeRequest current = mergeQueue.Dequeue();
 
-        // Bounce animation
-        StartCoroutine(BounceEffect(newFruit.transform, bounceScale, bounceDuration));
+            // Skip invalid objects
+            if (current.fruitA == null || current.fruitB == null) continue;
 
-        // Assign index and onSettled callback
-        Fruit fruitScript = newFruit.GetComponent<Fruit>();
-        if (fruitScript != null)
-        {
-            fruitScript.fruitIndex = nextIndex;
-            fruitScript.onSettled = () =>
+            // Score update
+            Fruit fruitScript = current.fruitA.GetComponent<Fruit>();
+            if (fruitScript?.fruitData != null)
             {
-                FruitDropperController dropper = FindObjectOfType<FruitDropperController>();
-                dropper?.StartCoroutine(dropper.EnableDropAfterDelay());
-            };
+                ScoreManager.instance?.AddScore(fruitScript.fruitData.scoreValue);
+
+                // Unlock in progression bar
+                FruitBarUIManager.instance?.UnlockFruit(fruitScript.fruitIndex - FruitBarUIManager.instance.StartIndex);
+            }
+
+            Destroy(current.fruitA);
+            Destroy(current.fruitB);
+
+            int nextIndex = current.index + 1;
+            if (FruitSelector.instance == null || nextIndex >= FruitSelector.instance.Fruits.Length) continue;
+
+            GameObject newFruit = Instantiate(FruitSelector.instance.Fruits[nextIndex], current.position, Quaternion.identity);
+            newFruit.transform.localScale = Vector3.one;
+
+            Fruit newFruitScript = newFruit.GetComponent<Fruit>();
+            if (newFruitScript != null)
+            {
+                newFruitScript.fruitIndex = nextIndex;
+            }
+
+            if (!sfxMuted && mergeSound != null)
+            {
+                AudioSource.PlayClipAtPoint(mergeSound, current.position);
+            }
+
+            StartCoroutine(BounceEffect(newFruit.transform, bounceScale, bounceDuration));
+
+            // Delay before next merge
+            yield return new WaitForSeconds(0.2f);
         }
+
+        isMerging = false;
     }
 
     private IEnumerator BounceEffect(Transform target, float scaleMultiplier, float duration)
@@ -88,7 +115,6 @@ public class MergeManager : MonoBehaviour
         Vector3 targetScale = originalScale * scaleMultiplier;
 
         float timer = 0f;
-
         while (timer < duration)
         {
             if (target == null) yield break;
@@ -108,5 +134,13 @@ public class MergeManager : MonoBehaviour
 
         if (target != null)
             target.localScale = originalScale;
+    }
+
+    private class MergeRequest
+    {
+        public int index;
+        public GameObject fruitA;
+        public GameObject fruitB;
+        public Vector3 position;
     }
 }

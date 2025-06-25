@@ -36,6 +36,7 @@ public class GameOverShareButton : MonoBehaviour
             Debug.Log("Text sharing is only implemented for Android.");
 #endif
         }
+        Debug.Log($"Highscore: {ScoreManager.instance.GetHighScore()}");
     }
 
 #if UNITY_ANDROID && !UNITY_EDITOR

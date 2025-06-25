@@ -5,11 +5,21 @@ using UnityEngine.UI;
 public class ComingSoonPanel : MonoBehaviour
 {
     [SerializeField] private Button crossButton;
+    [SerializeField] private AudioClip buttonClickSound;
     void Start()
     {
         crossButton.onClick.AddListener(() =>
-        {
+        {  
+            PlayClickSound();   
             PanelManager.instance.ShowOnly(null);
         });
+    }
+
+    private void PlayClickSound()
+    {
+        if (buttonClickSound != null)
+        {
+            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+        }
     }
 }

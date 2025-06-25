@@ -20,6 +20,9 @@ public class SettingsPanel : MonoBehaviour
     [SerializeField] private Sprite sfxOnSprite;
     [SerializeField] private Sprite sfxOffSprite;
 
+
+    [SerializeField] private AudioClip buttonClickSound;
+
     private void Start()
     {
         musicToggleButton?.onClick.AddListener(OnMusicToggle);
@@ -34,12 +37,14 @@ public class SettingsPanel : MonoBehaviour
 
     private void OnMusicToggle()
     {
+        PlayClickSound();
         Music.instance?.ToggleMusic();
         UpdateMusicIcon();
     }
 
     private void OnSFXToggle()
     {
+        PlayClickSound();
         MergeManager.instance?.ToggleSFX();
         FindObjectOfType<FruitDropperController>()?.ToggleSFX();
         UpdateSFXIcon();
@@ -47,6 +52,7 @@ public class SettingsPanel : MonoBehaviour
 
     private void RestartGame()
     {
+        PlayClickSound();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -62,5 +68,12 @@ public class SettingsPanel : MonoBehaviour
         if (sfxIcon == null || MergeManager.instance == null) return;
 
         sfxIcon.sprite = MergeManager.instance.IsSFXMuted() ? sfxOffSprite : sfxOnSprite;
+    }
+    private void PlayClickSound()
+    {
+        if (buttonClickSound != null)
+        {
+            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+        }
     }
 }

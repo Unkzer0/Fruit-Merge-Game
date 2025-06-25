@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 12
+  m_SortingOrder: 9
   m_Sprite: {fileID: 21300000, guid: de16fde5e9d2dc4479f09c751d256f5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fruitData: {fileID: 11400000, guid: df16aada25b765b4eb88254912eae992, type: 2}
   fruitIndex: 3
+  isMerging: 0
 --- !u!60 &8375879331848387818
 PolygonCollider2D:
   m_ObjectHideFlags: 0
