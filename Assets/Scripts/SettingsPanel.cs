@@ -28,7 +28,10 @@ public class SettingsPanel : MonoBehaviour
         musicToggleButton?.onClick.AddListener(OnMusicToggle);
         sfxToggleButton?.onClick.AddListener(OnSFXToggle);
         restartButton?.onClick.AddListener(RestartGame);
-        resumeButton?.onClick.AddListener(() => PanelManager.instance?.ShowOnly(null));
+        resumeButton?.onClick.AddListener(() => {
+            PlayClickSound();
+            PanelManager.instance?.ShowOnly(null);
+            });
 
         // Set initial icon states
         UpdateMusicIcon();
@@ -79,7 +82,7 @@ public class SettingsPanel : MonoBehaviour
     {
         if (buttonClickSound != null)
         {
-            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+            SoundManager.instance?.PlayButtonClick(buttonClickSound);
         }
     }
 }

@@ -9,6 +9,9 @@ public class GameOverTrigger : MonoBehaviour
     [SerializeField] private int screenshotHeight = 1920;
     [SerializeField] private int screenshotAntiAliasing = 2;
 
+    [Header("References")]
+    [SerializeField] private FruitDropperController fruitDropperController; 
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Fruit")) return;
@@ -17,7 +20,10 @@ public class GameOverTrigger : MonoBehaviour
 
         Destroy(other.gameObject);
 
-        // Capture Screenshot if camera is assigned
+        if (fruitDropperController != null)
+        {
+            fruitDropperController.DisableInput();
+        }
         if (screenshotCamera != null)
         {
             screenshotCamera.enabled = true;
@@ -48,5 +54,3 @@ public class GameOverTrigger : MonoBehaviour
         }
     }
 }
-
-

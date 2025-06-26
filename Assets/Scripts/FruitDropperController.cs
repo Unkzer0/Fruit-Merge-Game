@@ -19,7 +19,8 @@ public class FruitDropperController : MonoBehaviour
     private Vector3 targetPos;
     private bool canDrop = true;
     private bool isDragging = false;
-    private bool sfxMuted;
+    private bool sfxMuted = false;
+    private bool isInputDisabled = false; 
 
     private Vector2 lastTouchPos;
     private float lastTouchTime;
@@ -33,7 +34,7 @@ public class FruitDropperController : MonoBehaviour
 
     private void Update()
     {
-        if (PanelManager.AnyPanelOrJustClosed) return;
+        if (PanelManager.AnyPanelOrJustClosed || isInputDisabled) return;
 
         HandleTouch();
 
@@ -45,10 +46,9 @@ public class FruitDropperController : MonoBehaviour
 
     private void HandleTouch()
     {
-        if (Input.touchCount == 0) return;
+        if (isInputDisabled || Input.touchCount == 0) return;
 
         Touch touch = Input.GetTouch(0);
-
         if (touch.phase == TouchPhase.Began && IsPointerOverUI(touch.fingerId)) return;
 
         switch (touch.phase)
@@ -84,7 +84,6 @@ public class FruitDropperController : MonoBehaviour
 
         Vector3 screenPoint = new Vector3(screenPos.x, screenPos.y, mainCam.WorldToScreenPoint(transform.position).z);
         Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPoint);
-
         float clampedX = Mathf.Clamp(worldPos.x, minX, maxX);
         Vector3 newPos = new Vector3(clampedX, transform.position.y, transform.position.z);
 
@@ -111,7 +110,7 @@ public class FruitDropperController : MonoBehaviour
 
     private void TryDrop()
     {
-        if (!canDrop || FruitSelector.instance == null) return;
+        if (!canDrop || FruitSelector.instance == null || isInputDisabled) return;
 
         Vector3 spawnPos = dropSpawnPoint ? dropSpawnPoint.position : transform.position;
         Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
@@ -119,9 +118,7 @@ public class FruitDropperController : MonoBehaviour
         canDrop = false;
 
         if (!sfxMuted && dropSound != null)
-        {
             dropSound.Play();
-        }
 
         StartCoroutine(EnableDropAfterDelay());
     }
@@ -139,6 +136,10 @@ public class FruitDropperController : MonoBehaviour
     }
 
     public bool IsSFXMuted() => sfxMuted;
-
     public void SetCanDrop(bool value) => canDrop = value;
+
+    public void DisableInput()
+    {
+        isInputDisabled = true;
+    }
 }

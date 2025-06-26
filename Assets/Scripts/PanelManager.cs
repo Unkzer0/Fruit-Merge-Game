@@ -49,7 +49,7 @@ public class PanelManager : MonoBehaviour
     {
         if (buttonClickSound != null)
         {
-            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+            SoundManager.instance?.PlayButtonClick(buttonClickSound);
         }
     }
 

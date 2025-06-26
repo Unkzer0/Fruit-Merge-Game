@@ -28,7 +28,7 @@ public class GameOverShareButton : MonoBehaviour
     {
         if (buttonClickSound != null && Camera.main != null)
         {
-            AudioSource.PlayClipAtPoint(buttonClickSound, Camera.main.transform.position);
+            SoundManager.instance?.PlayButtonClick(buttonClickSound);
         }
     }
 

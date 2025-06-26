@@ -10,7 +10,6 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] private RawImage screenshotDisplay;
     [SerializeField] private Button restartButton;
     [SerializeField] private AudioClip buttonClickSound;
-    [SerializeField] private AudioSource uiAudioSource; 
 
     private RenderTexture capturedScreenshot;
 
@@ -39,7 +38,6 @@ public class GameOverPanel : MonoBehaviour
     public void SetScreenshot(RenderTexture rt)
     {
         capturedScreenshot = rt;
-
         if (screenshotDisplay != null && rt != null)
             screenshotDisplay.texture = capturedScreenshot;
     }
@@ -58,15 +56,15 @@ public class GameOverPanel : MonoBehaviour
 
     private void PlayClickSound()
     {
-        if (buttonClickSound != null && uiAudioSource != null)
+        if (buttonClickSound != null)
         {
-            uiAudioSource.PlayOneShot(buttonClickSound);
+            SoundManager.instance?.PlayButtonClick(buttonClickSound);
         }
     }
 
     private System.Collections.IEnumerator RestartAfterSound()
     {
-        yield return new WaitForSeconds(0.3f); 
+        yield return new WaitForSeconds(0.3f);
         PlayerPrefs.Save();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
