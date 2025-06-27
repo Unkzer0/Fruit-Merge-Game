@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class FruitDropperController : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class FruitDropperController : MonoBehaviour
     private bool canDrop = true;
     private bool isDragging = false;
     private bool sfxMuted = false;
-    private bool isInputDisabled = false; 
+    private bool isInputDisabled = false;
 
     private Vector2 lastTouchPos;
     private float lastTouchTime;
@@ -49,7 +50,8 @@ public class FruitDropperController : MonoBehaviour
         if (isInputDisabled || Input.touchCount == 0) return;
 
         Touch touch = Input.GetTouch(0);
-        if (touch.phase == TouchPhase.Began && IsPointerOverUI(touch.fingerId)) return;
+
+        if (IsTouchOverUI(touch.position)) return;
 
         switch (touch.phase)
         {
@@ -99,13 +101,19 @@ public class FruitDropperController : MonoBehaviour
         }
     }
 
-    private bool IsPointerOverUI(int fingerId)
+    private bool IsTouchOverUI(Vector2 screenPosition)
     {
-#if UNITY_EDITOR
-        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-#else
-        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
-#endif
+        if (EventSystem.current == null) return false;
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = screenPosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        return results.Count > 0;
     }
 
     private void TryDrop()
@@ -136,6 +144,7 @@ public class FruitDropperController : MonoBehaviour
     }
 
     public bool IsSFXMuted() => sfxMuted;
+
     public void SetCanDrop(bool value) => canDrop = value;
 
     public void DisableInput()

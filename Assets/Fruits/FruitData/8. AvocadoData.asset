@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c3e8a380854e6f4f96b6d98e2b60ea0, type: 3}
-  m_Name: 8. AvacadoData
+  m_Name: 8. AvocadoData
   m_EditorClassIdentifier: 
-  fruitName: Avacado
+  fruitName: Avocado
   sprite: {fileID: 21300000, guid: d4e8fb757ab81f549a6d8c1556f536be, type: 3}
   scoreValue: 14

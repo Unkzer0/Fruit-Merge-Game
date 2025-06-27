@@ -1,15 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameOverPanel : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] private Text scoreText;
-    [SerializeField] private Text highScoreText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private RawImage screenshotDisplay;
     [SerializeField] private Button restartButton;
     [SerializeField] private AudioClip buttonClickSound;
+
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem highScoreEffect; 
 
     private RenderTexture capturedScreenshot;
 
@@ -27,6 +31,10 @@ public class GameOverPanel : MonoBehaviour
             {
                 highScoreText.text = "New HighScore!";
                 highScoreText.gameObject.SetActive(true);
+
+               
+                if (highScoreEffect != null && !highScoreEffect.isPlaying)
+                    highScoreEffect.Play();
             }
             else
             {
