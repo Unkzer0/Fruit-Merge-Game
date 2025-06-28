@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameOverTrigger : MonoBehaviour
 {
@@ -10,20 +11,64 @@ public class GameOverTrigger : MonoBehaviour
     [SerializeField] private int screenshotAntiAliasing = 2;
 
     [Header("References")]
-    [SerializeField] private FruitDropperController fruitDropperController; 
+    [SerializeField] private FruitDropperController fruitDropperController;
+
+    [Header("Game Over Timing")]
+    [SerializeField] private float gameOverDelay = 3f;
+
+    private Dictionary<Collider2D, Coroutine> activeTimers = new Dictionary<Collider2D, Coroutine>();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Fruit")) return;
 
-        int finalScore = ScoreManager.instance?.GetCurrentScore() ?? 0;
-
-        Destroy(other.gameObject);
-
-        if (fruitDropperController != null)
+        if (!activeTimers.ContainsKey(other))
         {
-            fruitDropperController.DisableInput();
+            Coroutine timer = StartCoroutine(DelayedGameOver(other));
+            activeTimers.Add(other, timer);
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (activeTimers.TryGetValue(other, out Coroutine timer))
+        {
+            if (timer != null)
+            {
+                StopCoroutine(timer);
+            }
+
+            activeTimers.Remove(other);
+        }
+    }
+
+    private IEnumerator DelayedGameOver(Collider2D fruit)
+    {
+        float elapsed = 0f;
+        Collider2D trigger = GetComponent<Collider2D>();
+
+        while (elapsed < gameOverDelay)
+        {
+            if (!trigger.bounds.Intersects(fruit.bounds))
+            {
+                activeTimers.Remove(fruit);
+                yield break;
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        activeTimers.Clear();
+
+        // Disable dropper input
+        fruitDropperController?.DisableInput();
+
+        // Freeze fruit (instead of destroying it)
+        Rigidbody2D rb = fruit.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;
+
+        // Capture screenshot
         if (screenshotCamera != null)
         {
             screenshotCamera.enabled = true;
@@ -36,21 +81,13 @@ public class GameOverTrigger : MonoBehaviour
             );
 
             screenshotCamera.enabled = false;
-
             PanelManager.instance?.gameOverPanelScript?.SetScreenshot(rt);
         }
 
-        StartCoroutine(ShowGameOverDelayed());
-    }
+        // Wait before showing Game Over
+        yield return new WaitForSeconds(0.5f);
 
-    private IEnumerator ShowGameOverDelayed()
-    {
-        yield return new WaitForSeconds(5f);
-
-        if (PanelManager.instance != null)
-        {
-            PanelManager.instance.ShowGameOver();
-            PanelManager.instance.gameOverPanelScript?.ShowScore();
-        }
+        PanelManager.instance?.ShowGameOver();
+        PanelManager.instance?.gameOverPanelScript?.ShowScore();
     }
 }

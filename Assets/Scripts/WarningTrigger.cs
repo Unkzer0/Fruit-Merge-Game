@@ -1,5 +1,6 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider2D))]
 public class WarningTrigger : MonoBehaviour
@@ -7,28 +8,26 @@ public class WarningTrigger : MonoBehaviour
     [SerializeField] private WarningLineController warningLine;
     [SerializeField] private float warningDelay = 5f;
 
-    private Coroutine warningCoroutine;
+    private Dictionary<Collider2D, Coroutine> activeWarnings = new Dictionary<Collider2D, Coroutine>();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Fruit"))
+        if (other.CompareTag("Fruit") && !activeWarnings.ContainsKey(other))
         {
-            // Start delayed warning if not already running
-            if (warningCoroutine == null)
-                warningCoroutine = StartCoroutine(DelayedWarning(other));
+            Coroutine routine = StartCoroutine(DelayedWarning(other));
+            activeWarnings.Add(other, routine);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Fruit"))
+        if (other.CompareTag("Fruit") && activeWarnings.ContainsKey(other))
         {
-            // Cancel ongoing coroutine if the fruit exits early
-            if (warningCoroutine != null)
-            {
-                StopCoroutine(warningCoroutine);
-                warningCoroutine = null;
-            }
+            Coroutine routine = activeWarnings[other];
+            if (routine != null)
+                StopCoroutine(routine);
+
+            activeWarnings.Remove(other);
         }
     }
 
@@ -41,7 +40,7 @@ public class WarningTrigger : MonoBehaviour
         {
             if (!trigger.bounds.Intersects(fruit.bounds))
             {
-                warningCoroutine = null;
+                activeWarnings.Remove(fruit);
                 yield break; // Fruit exited early
             }
 
@@ -50,6 +49,6 @@ public class WarningTrigger : MonoBehaviour
         }
 
         warningLine?.TriggerWarningBlink();
-        warningCoroutine = null;
+        activeWarnings.Remove(fruit);
     }
 }

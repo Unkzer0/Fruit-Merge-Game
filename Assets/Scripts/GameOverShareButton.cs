@@ -18,12 +18,21 @@ public class GameOverShareButton : MonoBehaviour
     private void Start()
     {
         if (shareButton != null)
+        {
             shareButton.onClick.AddListener(() =>
             {
                 PlayClickSound();
-                ShareText(); 
-            }); ;
+                StartCoroutine(DelayedShare(0.3f)); // Delay for 0.3 seconds
+            });
+        }
     }
+
+    private IEnumerator DelayedShare(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShareText();
+    }
+
     private void PlayClickSound()
     {
         if (buttonClickSound != null && Camera.main != null)

@@ -29,7 +29,7 @@ public class GameOverPanel : MonoBehaviour
         {
             if (current > 0 && current == high)
             {
-                highScoreText.text = "New HighScore!";
+                highScoreText.text = "New HighScore!!";
                 highScoreText.gameObject.SetActive(true);
 
                
