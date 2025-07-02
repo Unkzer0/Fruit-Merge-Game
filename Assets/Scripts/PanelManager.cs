@@ -84,7 +84,7 @@ public class PanelManager : MonoBehaviour
         settingsOnMainMenuPanel.SetActive(false);
         comingSoonForMainMenuPanel.SetActive(false);
     }
-
+    public bool IsGameOverShown => gameOverPanel != null && gameOverPanel.activeSelf;
     // Panel Shortcuts
     public void ShowMainMenu() { PlayClickSound(); ShowOnly(mainMenuPanel); }
     public void ShowGameOver() { ShowOnly(gameOverPanel); }

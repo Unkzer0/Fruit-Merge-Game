@@ -19,7 +19,7 @@ public class MainMenuPanel : MonoBehaviour
             playButton.onClick.AddListener(() =>
             {
                 PlayClickSound();
-                StartCoroutine(HidePanelAfterDelay(0.45f)); // slight delay to let sound play
+                StartCoroutine(HidePanelAfterDelay(0.45f));
             });
         }
 
@@ -28,7 +28,7 @@ public class MainMenuPanel : MonoBehaviour
 
     private void UpdateHighScoreText()
     {
-        int highScore = PlayerPrefs.GetInt("HighScore", 0); // or ScoreManager.instance?.GetHighScore()
+        int highScore = PlayerPrefs.GetInt("HighScore", 0); // Or ScoreManager.instance?.GetHighScore()
         if (highScoreText != null)
         {
             highScoreText.text = $"{highScore} HIGHSCORE";
@@ -38,7 +38,10 @@ public class MainMenuPanel : MonoBehaviour
     private IEnumerator HidePanelAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        PanelManager.instance.ShowOnly(null); // hide the main menu to start the game
+        PanelManager.instance.ShowOnly(null);
+
+        // Load save after game UI becomes visible
+        GameSaveManager.instance.RestoreGame();
     }
 
     private void PlayClickSound()
@@ -49,5 +52,6 @@ public class MainMenuPanel : MonoBehaviour
         }
     }
 }
+
 
 

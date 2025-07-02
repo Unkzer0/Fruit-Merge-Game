@@ -11,37 +11,46 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] private RawImage screenshotDisplay;
     [SerializeField] private Button restartButton;
     [SerializeField] private AudioClip buttonClickSound;
+    [SerializeField] private AudioClip applauseSound;
+
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem highScoreEffect; 
 
     private RenderTexture capturedScreenshot;
 
-    public void ShowScore()
+   public void ShowScore()
+{
+    int current = ScoreManager.instance.GetCurrentScore();
+    int high = ScoreManager.instance.GetHighScore();
+
+    if (scoreText != null)
+        scoreText.text = $"Score: {current}";
+
+    if (highScoreText != null)
     {
-        int current = ScoreManager.instance.GetCurrentScore();
-        int high = ScoreManager.instance.GetHighScore();
-
-        if (scoreText != null)
-            scoreText.text = $"Score: {current}";
-
-        if (highScoreText != null)
+        if (current > 0 && current == high)
         {
-            if (current > 0 && current == high)
-            {
-                highScoreText.text = "New HighScore!!";
-                highScoreText.gameObject.SetActive(true);
+            highScoreText.text = "New HighScore!!";
+            highScoreText.gameObject.SetActive(true);
 
-               
-                if (highScoreEffect != null && !highScoreEffect.isPlaying)
+            if (applauseSound != null && !SoundManager.instance.IsSFXMuted())
+            {
+                SoundManager.instance.PlayButtonClick(applauseSound);
+            }
+            if (highScoreEffect != null)
+            {
                     highScoreEffect.Play();
             }
-            else
-            {
-                highScoreText.gameObject.SetActive(false);
+
             }
+        else
+        {
+            highScoreText.gameObject.SetActive(false);
         }
     }
+}
+
 
     public void SetScreenshot(RenderTexture rt)
     {

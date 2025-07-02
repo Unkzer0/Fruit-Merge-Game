@@ -87,7 +87,7 @@ public class FruitSelector : MonoBehaviour
         return fruit;
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         if (fruitSprites.Length > CurrentFruitIndex && currentFruitSpriteRenderer != null)
         {
@@ -105,4 +105,28 @@ public class FruitSelector : MonoBehaviour
     {
         return Random.Range(0, Mathf.Min(HighestStartingIndex + 1, Fruits.Length));
     }
+
+    public void SetCurrentFruit(int index)
+    {
+        if (index >= 0 && index < Fruits.Length)
+        {
+            CurrentFruitIndex = index;
+            CurrentFruit = Fruits[index];
+        }
+    }
+
+    public void SetNextFruit(int index)
+    {
+        if (index >= 0 && index < Fruits.Length)
+        {
+            NextFruitIndex = index;
+            NextFruit = Fruits[index];
+        }
+    }
+
+    public void UpdateFruitUI()
+    {
+        UpdateUI();
+    }
+
 }

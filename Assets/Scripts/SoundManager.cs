@@ -25,7 +25,7 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(clip);
     }
 
-    private bool IsSFXMuted()
+    public bool IsSFXMuted()
     {
         return PlayerPrefs.GetInt("SFXMuted", 0) == 1;
     }
