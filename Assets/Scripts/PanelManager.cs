@@ -10,7 +10,10 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject settingsOnMainMenuPanel;
-    [SerializeField] private GameObject comingSoonPanel;
+    [SerializeField] private GameObject boomPowerUpPanel;
+    [SerializeField] private GameObject fruitUpgradePowerUpPanel; 
+    [SerializeField] private GameObject smallFruitPowerUpPanel; 
+    [SerializeField] private GameObject cleanPowerUpPanel;
     [SerializeField] private GameObject comingSoonForMainMenuPanel;
     [SerializeField] private AudioClip buttonClickSound;
 
@@ -58,7 +61,10 @@ public class PanelManager : MonoBehaviour
         return mainMenuPanel.activeSelf ||
                gameOverPanel.activeSelf ||
                settingsPanel.activeSelf ||
-               comingSoonPanel.activeSelf ||
+               boomPowerUpPanel.activeSelf ||
+               smallFruitPowerUpPanel.activeSelf ||
+               cleanPowerUpPanel.activeSelf ||
+               fruitUpgradePowerUpPanel.activeSelf ||
                settingsOnMainMenuPanel.activeSelf ||
                comingSoonForMainMenuPanel.activeSelf;
     }
@@ -80,7 +86,10 @@ public class PanelManager : MonoBehaviour
         mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         settingsPanel.SetActive(false);
-        comingSoonPanel.SetActive(false);
+        boomPowerUpPanel.SetActive(false);
+        smallFruitPowerUpPanel.SetActive(false);
+        cleanPowerUpPanel.SetActive(false);
+        fruitUpgradePowerUpPanel.SetActive(false);
         settingsOnMainMenuPanel.SetActive(false);
         comingSoonForMainMenuPanel.SetActive(false);
     }
@@ -90,6 +99,9 @@ public class PanelManager : MonoBehaviour
     public void ShowGameOver() { ShowOnly(gameOverPanel); }
     public void ShowSettings() { PlayClickSound(); ShowOnly(settingsPanel); }
     public void ShowSettingOnMainMenu() { PlayClickSound(); ShowOnly(settingsOnMainMenuPanel); }
-    public void ShowComingSoon() { PlayClickSound(); ShowOnly(comingSoonPanel); }
+    public void ShowBoompowerUp() { PlayClickSound(); ShowOnly(boomPowerUpPanel); }
+    public void ShowSmallFruitpowerUp() { PlayClickSound(); ShowOnly(smallFruitPowerUpPanel); }
+    public void ShowClearFruitpowerUp() { PlayClickSound(); ShowOnly(cleanPowerUpPanel); }
+    public void ShowFruitUpgradepowerUp() { PlayClickSound(); ShowOnly(fruitUpgradePowerUpPanel); }
     public void ShowComingSoonFromMainMenu() { PlayClickSound(); ShowOnly(comingSoonForMainMenuPanel); }
 }

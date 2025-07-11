@@ -61,6 +61,7 @@ public class SettingsPanel : MonoBehaviour
 
     private IEnumerator RestartAfterDelay(float delay)
     {
+        GameSaveManager.instance?.DeleteSave();
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

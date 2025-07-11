@@ -89,5 +89,6 @@ public class GameOverTrigger : MonoBehaviour
 
         PanelManager.instance?.ShowGameOver();
         PanelManager.instance?.gameOverPanelScript?.ShowScore();
+        GameSaveManager.instance?.DeleteSave();
     }
 }

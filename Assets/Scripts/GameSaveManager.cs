@@ -6,6 +6,7 @@ public class GameSaveManager : MonoBehaviour
 {
     public static GameSaveManager instance;
     private string saveFilePath;
+    private bool hasRestored = false;
 
     private void Awake()
     {
@@ -30,7 +31,8 @@ public class GameSaveManager : MonoBehaviour
 
     public void RestoreGame()
     {
-        if (!File.Exists(saveFilePath)) return;
+        if (hasRestored || !File.Exists(saveFilePath)) return;
+        hasRestored = true;
 
         string json = File.ReadAllText(saveFilePath);
         GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
