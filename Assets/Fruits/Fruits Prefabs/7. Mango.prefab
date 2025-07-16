@@ -64,8 +64,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.19147786, y: -0.13121948}
-  m_Size: {x: 0.5737327, y: 0.8888761}
+  m_Offset: {x: 0.23467346, y: -0.1755848}
+  m_Size: {x: 0.8336459, y: 1.1861563}
   m_Direction: 0
 --- !u!1 &5988805980076662074
 GameObject:
@@ -131,9 +131,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.23761994, y: -0.3965809}
+  m_Offset: {x: -0.28443998, y: -0.52285075}
   serializedVersion: 2
-  m_Radius: 0.20595458
+  m_Radius: 0.32353836
 --- !u!1 &6465048443884656468
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +212,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 6
-  m_Sprite: {fileID: 21300000, guid: 4c431cda6dde5cf4fb0141b372cb10c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 52c132feb1339514fbf582cae44e7b1b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -297,6 +297,6 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.028749913, y: 0.07642141}
+  m_Offset: {x: 0.044553876, y: 0.13999999}
   serializedVersion: 2
-  m_Radius: 0.4604517
+  m_Radius: 0.6442847

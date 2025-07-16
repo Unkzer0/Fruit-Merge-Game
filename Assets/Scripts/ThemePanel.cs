@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class comingSoonForMainMenu : MonoBehaviour
+
+public class ThemePanel : MonoBehaviour
 {
     [SerializeField] private Button crossButton;
     [SerializeField] private AudioClip buttonClickSound;
@@ -11,9 +12,10 @@ public class comingSoonForMainMenu : MonoBehaviour
         crossButton.onClick.AddListener(() =>
         {
             PlayClickSound();
-            PanelManager.instance.ShowMainMenu();
+            PanelManager.instance.ShowOnly(null);
         });
     }
+
     private void PlayClickSound()
     {
         if (buttonClickSound != null)

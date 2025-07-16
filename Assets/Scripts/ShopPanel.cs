@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class ComingSoonPanel : MonoBehaviour
+
+public class ShopPanel : MonoBehaviour
 {
     [SerializeField] private Button crossButton;
     [SerializeField] private AudioClip buttonClickSound;
     void Start()
     {
         crossButton.onClick.AddListener(() =>
-        {  
-            PlayClickSound();   
+        {
+            PlayClickSound();
             PanelManager.instance.ShowOnly(null);
         });
     }

@@ -14,7 +14,8 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject fruitUpgradePowerUpPanel; 
     [SerializeField] private GameObject smallFruitPowerUpPanel; 
     [SerializeField] private GameObject cleanPowerUpPanel;
-    [SerializeField] private GameObject comingSoonForMainMenuPanel;
+    [SerializeField] private GameObject shopPanel;
+    [SerializeField] private GameObject themePanel;
     [SerializeField] private AudioClip buttonClickSound;
 
     private bool justClosedPanel = false;
@@ -66,7 +67,8 @@ public class PanelManager : MonoBehaviour
                cleanPowerUpPanel.activeSelf ||
                fruitUpgradePowerUpPanel.activeSelf ||
                settingsOnMainMenuPanel.activeSelf ||
-               comingSoonForMainMenuPanel.activeSelf;
+               shopPanel.activeSelf ||
+               themePanel.activeSelf;
     }
 
     public static bool AnyPanelOrJustClosed =>
@@ -91,7 +93,8 @@ public class PanelManager : MonoBehaviour
         cleanPowerUpPanel.SetActive(false);
         fruitUpgradePowerUpPanel.SetActive(false);
         settingsOnMainMenuPanel.SetActive(false);
-        comingSoonForMainMenuPanel.SetActive(false);
+        shopPanel.SetActive(false);
+        themePanel.SetActive(false);
     }
     public bool IsGameOverShown => gameOverPanel != null && gameOverPanel.activeSelf;
     // Panel Shortcuts
@@ -103,5 +106,6 @@ public class PanelManager : MonoBehaviour
     public void ShowSmallFruitpowerUp() { PlayClickSound(); ShowOnly(smallFruitPowerUpPanel); }
     public void ShowClearFruitpowerUp() { PlayClickSound(); ShowOnly(cleanPowerUpPanel); }
     public void ShowFruitUpgradepowerUp() { PlayClickSound(); ShowOnly(fruitUpgradePowerUpPanel); }
-    public void ShowComingSoonFromMainMenu() { PlayClickSound(); ShowOnly(comingSoonForMainMenuPanel); }
+    public void ShowShop() { PlayClickSound(); ShowOnly(shopPanel); }
+    public void ShowtTheme() { PlayClickSound(); ShowOnly(themePanel); }
 }

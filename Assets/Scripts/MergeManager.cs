@@ -11,9 +11,16 @@ public class MergeManager : MonoBehaviour
     [SerializeField] private float bounceScale = 1.2f;
     [SerializeField] private float bounceDuration = 0.2f;
 
+    [Header("Combo Popup")]
+    [SerializeField] private ComboTextPool comboTextPool;
+
     private bool sfxMuted;
     private Queue<MergeRequest> mergeQueue = new Queue<MergeRequest>();
     private bool isMerging = false;
+
+    private int consecutiveMergeCount = 0;
+    private int mergesInCurrentDrop = 0;
+    [HideInInspector] public bool mergeHappenedThisDrop = false;
 
     private void Awake()
     {
@@ -36,12 +43,10 @@ public class MergeManager : MonoBehaviour
 
     public bool IsSFXMuted() => sfxMuted;
 
-    // Called from Fruit.cs
     public void QueueMergeRequest(int fruitIndex, GameObject fruit1, GameObject fruit2, Vector3 mergePosition)
     {
         if (fruit1 == null || fruit2 == null) return;
 
-        // Always enqueue the merge
         mergeQueue.Enqueue(new MergeRequest
         {
             index = fruitIndex,
@@ -50,22 +55,35 @@ public class MergeManager : MonoBehaviour
             position = mergePosition
         });
 
-        // Start processing if not already
         if (!isMerging)
         {
             StartCoroutine(ProcessMergeQueue());
         }
     }
 
+    public void RegisterSuccessfulMerge()
+    {
+        mergeHappenedThisDrop = true;
+        mergesInCurrentDrop++;
+
+
+        if (comboTextPool != null &&
+            (consecutiveMergeCount == 4 || consecutiveMergeCount == 6 || consecutiveMergeCount == 8 ||
+             consecutiveMergeCount == 10 || consecutiveMergeCount == 12 || consecutiveMergeCount == 14))
+        {
+            comboTextPool.TryPlayComboText(consecutiveMergeCount);
+        }
+    }
     private IEnumerator ProcessMergeQueue()
     {
         isMerging = true;
+        mergesInCurrentDrop = 0;  
+
 
         while (mergeQueue.Count > 0)
         {
             MergeRequest current = mergeQueue.Dequeue();
 
-            // Skip invalid objects
             if (current.fruitA == null || current.fruitB == null) continue;
 
             // Score update
@@ -73,9 +91,9 @@ public class MergeManager : MonoBehaviour
             if (fruitScript?.fruitData != null)
             {
                 ScoreManager.instance?.AddScore(fruitScript.fruitData.scoreValue);
-
-                // Unlock in progression bar
-                FruitBarUIManager.instance?.UnlockFruit(fruitScript.fruitIndex - FruitBarUIManager.instance.StartIndex);
+                FruitBarUIManager.instance?.UnlockFruit(
+                    fruitScript.fruitIndex - FruitBarUIManager.instance.StartIndex
+                );
             }
 
             Destroy(current.fruitA);
@@ -84,7 +102,11 @@ public class MergeManager : MonoBehaviour
             int nextIndex = current.index + 1;
             if (FruitSelector.instance == null || nextIndex >= FruitSelector.instance.Fruits.Length) continue;
 
-            GameObject newFruit = Instantiate(FruitSelector.instance.Fruits[nextIndex], current.position, Quaternion.identity);
+            GameObject newFruit = Instantiate(
+                FruitSelector.instance.Fruits[nextIndex],
+                current.position,
+                Quaternion.identity
+            );
             newFruit.transform.localScale = Vector3.one;
 
             Fruit newFruitScript = newFruit.GetComponent<Fruit>();
@@ -93,16 +115,28 @@ public class MergeManager : MonoBehaviour
                 newFruitScript.fruitIndex = nextIndex;
             }
 
+            // Play merge sound
             if (!sfxMuted && mergeSound != null)
             {
                 AudioSource.PlayClipAtPoint(mergeSound, current.position);
             }
 
+            // Bounce effect
             StartCoroutine(BounceEffect(newFruit.transform, bounceScale, bounceDuration));
 
-            // Delay before next merge
+            RegisterSuccessfulMerge();
+
+            if (comboTextPool != null &&
+                (consecutiveMergeCount == 4 || consecutiveMergeCount == 6 || consecutiveMergeCount == 8 ||
+                 consecutiveMergeCount == 10 || consecutiveMergeCount == 12 || consecutiveMergeCount == 14))
+            {
+                comboTextPool.TryPlayComboText(consecutiveMergeCount);
+            }
+
             yield return new WaitForSeconds(0.2f);
         }
+        PlayBestComboAnimation(mergesInCurrentDrop);
+
 
         isMerging = false;
     }
@@ -134,6 +168,21 @@ public class MergeManager : MonoBehaviour
 
         if (target != null)
             target.localScale = originalScale;
+    }
+    private void PlayBestComboAnimation(int mergeCount)
+    {
+        if (mergeCount >= 14)
+            comboTextPool?.TryPlayComboText(14);
+        else if (mergeCount >= 12)
+            comboTextPool?.TryPlayComboText(12);
+        else if (mergeCount >= 10)
+            comboTextPool?.TryPlayComboText(10);
+        else if (mergeCount >= 8)
+            comboTextPool?.TryPlayComboText(8);
+        else if (mergeCount >= 6)
+            comboTextPool?.TryPlayComboText(6);
+        else if (mergeCount >= 4)
+            comboTextPool?.TryPlayComboText(4);
     }
 
     private class MergeRequest

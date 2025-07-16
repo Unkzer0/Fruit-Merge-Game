@@ -33,6 +33,8 @@ public class FruitDropperController : MonoBehaviour
         targetPos = transform.position;
     }
 
+
+
     private void Update()
     {
         if (PanelManager.AnyPanelOrJustClosed || isInputDisabled) return;
@@ -128,6 +130,7 @@ public class FruitDropperController : MonoBehaviour
         if (!sfxMuted && dropSound != null)
             dropSound.Play();
 
+      
         StartCoroutine(EnableDropAfterDelay());
     }
 
