@@ -16,6 +16,9 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject cleanPowerUpPanel;
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private GameObject themePanel;
+    [SerializeField] private GameObject fruitUnlockPanel;
+
+
     [SerializeField] private AudioClip buttonClickSound;
 
     private bool justClosedPanel = false;
@@ -68,8 +71,10 @@ public class PanelManager : MonoBehaviour
                fruitUpgradePowerUpPanel.activeSelf ||
                settingsOnMainMenuPanel.activeSelf ||
                shopPanel.activeSelf ||
-               themePanel.activeSelf;
+               themePanel.activeSelf ||
+               fruitUnlockPanel.activeSelf; //  Add this line
     }
+
 
     public static bool AnyPanelOrJustClosed =>
         instance != null && (instance.IsAnyPanelOpen() || instance.JustClosedPanel);

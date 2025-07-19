@@ -8,6 +8,7 @@ public class FruitBarUIManager : MonoBehaviour
     public int StartIndex = 5; // First unlockable fruit index
 
     [SerializeField] private FruitBarSlot[] slots; // Matches fruit index - StartIndex
+    [SerializeField] private FruitUnlockPanel fruitUnlockPanel; //  Add this
 
     private bool[] unlocked;
 
@@ -38,10 +39,17 @@ public class FruitBarUIManager : MonoBehaviour
     public void UnlockFruit(int fruitIndex)
     {
         int slotIndex = fruitIndex - StartIndex;
+
         if (!IsValidSlotIndex(slotIndex) || unlocked[slotIndex]) return;
 
         unlocked[slotIndex] = true;
         slots[slotIndex].Reveal();
+
+        //  Show unlock animation panel
+        if (fruitUnlockPanel != null)
+        {
+            fruitUnlockPanel.ShowFruitUnlock(fruitIndex);
+        }
     }
 
     public bool IsUnlocked(int fruitIndex)

@@ -11,6 +11,10 @@ public class ComboTextPoolItem : MonoBehaviour
 
     public void Play()
     {
+        // Do not play animation if any panel is active
+        if (PanelManager.instance != null && PanelManager.instance.IsAnyPanelOpen())
+            return;
+
         gameObject.SetActive(true);
         animator.SetTrigger("Pop");
     }
