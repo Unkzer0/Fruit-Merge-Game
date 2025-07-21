@@ -17,6 +17,7 @@ public class SmallFruitRemovePowerUp : MonoBehaviour
         if (allFruits.Length == 0)
         {
             isActive = false;
+            PowerUpManager.instance.OnPowerUpComplete(); // notify even if nothing to remove
             return;
         }
 
@@ -40,6 +41,7 @@ public class SmallFruitRemovePowerUp : MonoBehaviour
         if (fruitsByIndex.Count == 0)
         {
             isActive = false;
+            PowerUpManager.instance.OnPowerUpComplete(); // notify even if no valid fruit index found
             return;
         }
 
@@ -58,5 +60,6 @@ public class SmallFruitRemovePowerUp : MonoBehaviour
         }
 
         isActive = false;
+        PowerUpManager.instance.OnPowerUpComplete(); // notify after successful removal
     }
 }

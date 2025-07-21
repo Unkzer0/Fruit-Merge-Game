@@ -7,11 +7,9 @@ public class BoomPowerUp : MonoBehaviour
 
     public void Activate()
     {
-        isActive = true;
-    }
+        if (isActive) return;
 
-    private void Start()
-    {
+        isActive = true;
         mainCam = Camera.main;
     }
 
@@ -36,14 +34,12 @@ public class BoomPowerUp : MonoBehaviour
     {
         Vector2 worldPoint = mainCam.ScreenToWorldPoint(screenPos);
 
-        // Get all colliders under the touch point
         Collider2D[] hits = Physics2D.OverlapPointAll(worldPoint);
 
         foreach (Collider2D col in hits)
         {
             Transform root = col.transform;
 
-            // Traverse up to find the top-level Fruit object (e.g., named like "7. Mango")
             while (root.parent != null && root.parent.CompareTag("Fruit"))
             {
                 root = root.parent;
@@ -53,11 +49,11 @@ public class BoomPowerUp : MonoBehaviour
             {
                 Destroy(root.gameObject);
                 isActive = false;
+                PowerUpManager.instance.OnPowerUpComplete(); //  Inform manager
                 return;
             }
         }
     }
-
 }
 
 

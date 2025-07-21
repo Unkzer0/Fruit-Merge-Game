@@ -68,5 +68,9 @@ public class CleanUpPowerUp : MonoBehaviour
         // Final correction
         mainCamera.orthographicSize = originalCamSize;
         container.rotation = originalRotation;
+
+        //  Notify manager cleanup is done
+        PowerUpManager.instance.OnPowerUpComplete();
     }
 }
+

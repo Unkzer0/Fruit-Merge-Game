@@ -52,6 +52,8 @@ public class FruitUpgradePowerUp : MonoBehaviour
                 // Duplicate the fruit at the same position
                 GameObject fruitClone = Instantiate(root.gameObject, root.position, root.rotation, root.parent);
                 isActive = false;
+
+                PowerUpManager.instance.OnPowerUpComplete(); // notify manager
                 return;
             }
         }
