@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 7. MangoData
   m_EditorClassIdentifier: 
   fruitName: Mango
-  sprite: {fileID: 21300000, guid: 4c431cda6dde5cf4fb0141b372cb10c8, type: 3}
+  sprite: {fileID: 21300000, guid: 52c132feb1339514fbf582cae44e7b1b, type: 3}
   scoreValue: 12

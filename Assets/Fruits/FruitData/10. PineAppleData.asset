@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 10. PineAppleData
   m_EditorClassIdentifier: 
   fruitName: Pineapple
-  sprite: {fileID: 21300000, guid: eb089ea1a08209846bc469cf9a25ddc4, type: 3}
+  sprite: {fileID: 21300000, guid: fb06c95e6bc410b4180eb4ae9a556ee6, type: 3}
   scoreValue: 18
