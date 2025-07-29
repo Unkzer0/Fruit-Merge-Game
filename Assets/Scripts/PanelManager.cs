@@ -81,16 +81,19 @@ public class PanelManager : MonoBehaviour
 
     public void ShowOnly(GameObject panelToShow)
     {
-        HideAllPanels();
+        // If the panel to show is themePanel or shopPanel, exclude mainMenuPanel from being hidden
+        bool excludeMainMenu = panelToShow == themePanel || panelToShow == shopPanel || panelToShow == settingsOnMainMenuPanel;
+
+        HideAllPanels(excludeMainMenu);
         justClosedPanel = true;
 
         if (panelToShow != null)
             panelToShow.SetActive(true);
     }
 
-    private void HideAllPanels()
+    private void HideAllPanels(bool excludeMainMenu = false)
     {
-        mainMenuPanel.SetActive(false);
+        if (!excludeMainMenu) mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         settingsPanel.SetActive(false);
         boomPowerUpPanel.SetActive(false);

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1558badacd42ffa429f5927001144a70, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  themeName: Default
+  bearSprite: {fileID: 21300000, guid: 6f5b356457e494c47933e0246b1419bb, type: 3}
+  mainMenuBackground: {fileID: 21300000, guid: 4dc4a89528e27394cb4cc5f76b8b167b, type: 3}
+  gameOverPanelBackground: {fileID: 21300000, guid: 4dc4a89528e27394cb4cc5f76b8b167b, type: 3}
+  gameSceneBackground: {fileID: 21300000, guid: 8df8a8436a543fa4bac3cccb24d5d1f3, type: 3}
+  logo: {fileID: 21300000, guid: c284f949b7b228c4db5981acbaf5e671, type: 3}
+  fruitSprites:
+  - {fileID: 21300000, guid: 61b9e931e455b7c408901c9bf499bf95, type: 3}
+  - {fileID: 21300000, guid: a3a4468cd0560f14f888e77b29bac4e5, type: 3}
+  - {fileID: 21300000, guid: 565b03df50aedec46b4029402acd7412, type: 3}
+  - {fileID: 21300000, guid: 3a316103fa3686644904afeb8a5d0b5f, type: 3}
+  - {fileID: 21300000, guid: 891d8ee33aac6434ab4c513c4eec0246, type: 3}
+  - {fileID: 21300000, guid: 312d2f4e41af110478d4bcd4f5ca1bc2, type: 3}
+  - {fileID: 21300000, guid: 52c132feb1339514fbf582cae44e7b1b, type: 3}
+  - {fileID: 21300000, guid: e8a67217fa6bbeb4d892022c4e168af4, type: 3}
+  - {fileID: 21300000, guid: fe327272a646704449d93fa3a5307566, type: 3}
+  - {fileID: 21300000, guid: fb06c95e6bc410b4180eb4ae9a556ee6, type: 3}
+  - {fileID: 21300000, guid: f56e6963bb67dac428224be3902cf891, type: 3}

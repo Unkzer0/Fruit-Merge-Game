@@ -12,7 +12,7 @@ public class ShopPanel : MonoBehaviour
         crossButton.onClick.AddListener(() =>
         {
             PlayClickSound();
-            PanelManager.instance.ShowOnly(null);
+            gameObject.SetActive(false);
         });
     }
 

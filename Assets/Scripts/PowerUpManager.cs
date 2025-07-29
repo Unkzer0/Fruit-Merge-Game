@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using TMPro;
 public class PowerUpManager : MonoBehaviour
 {
     public static PowerUpManager instance;
@@ -15,11 +15,17 @@ public class PowerUpManager : MonoBehaviour
     [SerializeField] private SmallFruitRemovePowerUp smallFruitRemovePowerUp;
     [SerializeField] private CleanUpPowerUp cleanUpPowerUp;
 
-    [Header("Power-Up Counts")]
-    public int boomCount = 3;
-    public int fruitUpgradeCount = 3;
-    public int smallFruitRemoveCount = 3;
-    public int cleanUpCount = 3;
+    [Header("Power-Up Credits")]
+    [SerializeField] TextMeshProUGUI BoomCredit;
+    [SerializeField] TextMeshProUGUI FruitUpgradeCredits;
+    [SerializeField] TextMeshProUGUI SmallFruitUpgradeCredits;
+    [SerializeField] TextMeshProUGUI CleanUpPowerUpCredits;
+
+    
+    private int boomCount = 1;
+    private int fruitUpgradeCount = 1;
+    private int smallFruitRemoveCount = 1;
+    private int cleanUpCount = 1;
 
     private bool isPowerUpActive = false;
 
@@ -69,6 +75,7 @@ public class PowerUpManager : MonoBehaviour
                 if (boomCount > 0)
                 {
                     boomCount--;
+                    BoomCredit.text = boomCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(boomPowerUp));
                     return true;
                 }
@@ -80,6 +87,7 @@ public class PowerUpManager : MonoBehaviour
                 if (fruitUpgradeCount > 0)
                 {
                     fruitUpgradeCount--;
+                    FruitUpgradeCredits.text = fruitUpgradeCount.ToString();
                     fruitUpgradePowerUp.gameObject.SetActive(true);
                     StartCoroutine(ActivatePowerUpCoroutine(fruitUpgradePowerUp));
                     return true;
@@ -92,6 +100,7 @@ public class PowerUpManager : MonoBehaviour
                 if (smallFruitRemoveCount > 0)
                 {
                     smallFruitRemoveCount--;
+                    SmallFruitUpgradeCredits.text = smallFruitRemoveCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(smallFruitRemovePowerUp));
                     return true;
                 }
@@ -103,6 +112,7 @@ public class PowerUpManager : MonoBehaviour
                 if (cleanUpCount > 0)
                 {
                     cleanUpCount--;
+                    CleanUpPowerUpCredits.text = cleanUpCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(cleanUpPowerUp));
                     return true;
                 }
@@ -138,4 +148,6 @@ public class PowerUpManager : MonoBehaviour
     public void TryUseFruitUpgrade() => TryUsePowerUp("FruitUpgrade");
     public void TryUseSmallFruitRemove() => TryUsePowerUp("SmallFruitRemove");
     public void TryUseCleanUp() => TryUsePowerUp("CleanUp");
+
+    public bool IsPowerUpActive => isPowerUpActive; // Expose the flag
 }
