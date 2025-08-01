@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using TMPro;
 public class PowerUpManager : MonoBehaviour
 {
     public static PowerUpManager instance;
@@ -15,11 +15,28 @@ public class PowerUpManager : MonoBehaviour
     [SerializeField] private SmallFruitRemovePowerUp smallFruitRemovePowerUp;
     [SerializeField] private CleanUpPowerUp cleanUpPowerUp;
 
-    [Header("Power-Up Counts")]
-    public int boomCount = 3;
-    public int fruitUpgradeCount = 3;
-    public int smallFruitRemoveCount = 3;
-    public int cleanUpCount = 3;
+    [Header("Power-Up Credits")]
+    [SerializeField] TextMeshProUGUI BoomCredit;
+    [SerializeField] TextMeshProUGUI FruitUpgradeCredits;
+    [SerializeField] TextMeshProUGUI SmallFruitUpgradeCredits;
+    [SerializeField] TextMeshProUGUI CleanUpPowerUpCredits;
+
+    [Header("Power-Up Effected Elements")]
+    [SerializeField] GameObject fruitDropper;
+    [SerializeField] GameObject scoreBoard;
+    [SerializeField] GameObject nextFruitBar;
+    [SerializeField] GameObject noAds;
+    [SerializeField] GameObject setting;
+    [SerializeField] GameObject powerup1;
+    [SerializeField] GameObject powerup2;
+    [SerializeField] GameObject powerup3;
+    [SerializeField] GameObject powerup4;
+    [SerializeField] GameObject fruitBar;
+    
+    private int boomCount = 1;
+    private int fruitUpgradeCount = 1;
+    private int smallFruitRemoveCount = 1;
+    private int cleanUpCount = 1;
 
     private bool isPowerUpActive = false;
 
@@ -69,6 +86,7 @@ public class PowerUpManager : MonoBehaviour
                 if (boomCount > 0)
                 {
                     boomCount--;
+                    BoomCredit.text = boomCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(boomPowerUp));
                     return true;
                 }
@@ -80,6 +98,7 @@ public class PowerUpManager : MonoBehaviour
                 if (fruitUpgradeCount > 0)
                 {
                     fruitUpgradeCount--;
+                    FruitUpgradeCredits.text = fruitUpgradeCount.ToString();
                     fruitUpgradePowerUp.gameObject.SetActive(true);
                     StartCoroutine(ActivatePowerUpCoroutine(fruitUpgradePowerUp));
                     return true;
@@ -92,6 +111,7 @@ public class PowerUpManager : MonoBehaviour
                 if (smallFruitRemoveCount > 0)
                 {
                     smallFruitRemoveCount--;
+                    SmallFruitUpgradeCredits.text = smallFruitRemoveCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(smallFruitRemovePowerUp));
                     return true;
                 }
@@ -103,6 +123,7 @@ public class PowerUpManager : MonoBehaviour
                 if (cleanUpCount > 0)
                 {
                     cleanUpCount--;
+                    CleanUpPowerUpCredits.text = cleanUpCount.ToString();
                     StartCoroutine(ActivatePowerUpCoroutine(cleanUpPowerUp));
                     return true;
                 }
@@ -133,9 +154,39 @@ public class PowerUpManager : MonoBehaviour
         isPowerUpActive = false;
     }
 
+    public void PowerUpDisableElement()
+    {
+        fruitDropper.SetActive(false);
+        scoreBoard.SetActive(false);
+        nextFruitBar.SetActive(false);
+        noAds.SetActive(false);
+        setting.SetActive(false);
+        powerup1.SetActive(false);
+        powerup2.SetActive(false);  
+        powerup3.SetActive(false);
+        powerup4.SetActive(false);
+        fruitBar.SetActive(false);
+    }
+
+    public void PowerUpEnableElement()
+    {
+        fruitDropper.SetActive(true);
+        scoreBoard.SetActive(true);
+        nextFruitBar.SetActive(true);
+        noAds.SetActive(true);
+        setting.SetActive(true);
+        powerup1.SetActive(true);
+        powerup2.SetActive(true);
+        powerup3.SetActive(true);
+        powerup4.SetActive(true);
+        fruitBar.SetActive(true);
+    }
+
     // Convenient methods for buttons
     public void TryUseBoom() => TryUsePowerUp("Boom");
     public void TryUseFruitUpgrade() => TryUsePowerUp("FruitUpgrade");
     public void TryUseSmallFruitRemove() => TryUsePowerUp("SmallFruitRemove");
     public void TryUseCleanUp() => TryUsePowerUp("CleanUp");
+
+    public bool IsPowerUpActive => isPowerUpActive; // Expose the flag
 }

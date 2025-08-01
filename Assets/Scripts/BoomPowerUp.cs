@@ -5,12 +5,16 @@ public class BoomPowerUp : MonoBehaviour
     private Camera mainCam;
     private bool isActive = false;
 
+    [Header("Sound")]
+    public AudioClip BoomSound;
+
     public void Activate()
     {
         if (isActive) return;
 
         isActive = true;
         mainCam = Camera.main;
+        PowerUpManager.instance.PowerUpDisableElement();
     }
 
     private void Update()
@@ -47,12 +51,21 @@ public class BoomPowerUp : MonoBehaviour
 
             if (root.CompareTag("Fruit"))
             {
+                SoundManager.instance.PlayButtonClick(BoomSound);
                 Destroy(root.gameObject);
                 isActive = false;
-                PowerUpManager.instance.OnPowerUpComplete(); //  Inform manager
+                PowerUpManager.instance.OnPowerUpComplete(); // Inform manager
+
+                // Use a wrapper method to call PowerUpEnableElement
+                Invoke(nameof(EnablePowerUpElements), 0.2f);
                 return;
             }
         }
+    }
+
+    private void EnablePowerUpElements()
+    {
+        PowerUpManager.instance.PowerUpEnableElement();
     }
 }
 

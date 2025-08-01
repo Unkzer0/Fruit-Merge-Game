@@ -5,11 +5,14 @@ public class FruitUpgradePowerUp : MonoBehaviour
     private Camera mainCam;
     private bool isActive = false;
 
+    [Header("Sound")]
+    public AudioClip FruitUpgradeSound;
+
     public void Activate()
     {
         isActive = true;
+        PowerUpManager.instance.PowerUpDisableElement();
     }
-
     private void Start()
     {
         mainCam = Camera.main;
@@ -39,23 +42,21 @@ public class FruitUpgradePowerUp : MonoBehaviour
 
         foreach (Collider2D col in hits)
         {
-            Transform root = col.transform;
-
-            // Traverse up to find the top-level Fruit object
-            while (root.parent != null && root.parent.CompareTag("Fruit"))
+            // Only upgrade the exact fruit that was clicked/touched
+            if (col.CompareTag("Fruit"))
             {
-                root = root.parent;
-            }
-
-            if (root.CompareTag("Fruit"))
-            {
-                // Duplicate the fruit at the same position
-                GameObject fruitClone = Instantiate(root.gameObject, root.position, root.rotation, root.parent);
+                Transform fruitTransform = col.transform;
+                SoundManager.instance.PlayButtonClick(FruitUpgradeSound);
+                GameObject fruitClone = Instantiate(fruitTransform.gameObject, fruitTransform.position, fruitTransform.rotation, fruitTransform.parent);
                 isActive = false;
-
-                PowerUpManager.instance.OnPowerUpComplete(); // notify manager
+                PowerUpManager.instance.OnPowerUpComplete();
+                Invoke(nameof(EnablePowerUpElements), 0.2f);
                 return;
             }
         }
+    }
+    private void EnablePowerUpElements()
+    {
+        PowerUpManager.instance.PowerUpEnableElement();
     }
 }

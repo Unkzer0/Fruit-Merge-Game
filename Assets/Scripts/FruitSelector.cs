@@ -11,8 +11,9 @@ public class FruitSelector : MonoBehaviour
     [Header("UI Display")]
     [SerializeField] private Sprite[] fruitSprites;
     [SerializeField] private Sprite[] nextFruitSprites;
-    [SerializeField] private SpriteRenderer currentFruitSpriteRenderer;
-    [SerializeField] private Image nextFruitUIImage;
+    public SpriteRenderer currentFruitSpriteRenderer;
+    // Change the access modifier of nextFruitUIImage from private to public
+    public Image nextFruitUIImage;
 
     [SerializeField] private Transform displayFollowTransform;
     [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);

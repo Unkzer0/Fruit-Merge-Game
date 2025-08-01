@@ -4,15 +4,21 @@ using System.Collections.Generic;
 public class SmallFruitRemovePowerUp : MonoBehaviour
 {
     private bool isActive = false;
+    [Header("Sound")]
+    public AudioClip SmallFruitRemoveSound;
+
+    [SerializeField] GameObject FruitDropper;
 
     public void Activate()
     {
         isActive = true;
+        FruitDropper.SetActive(false);
         TryRemoveSmallestFruits();
     }
 
     private void TryRemoveSmallestFruits()
     {
+        SoundManager.instance.PlayButtonClick(SmallFruitRemoveSound);
         GameObject[] allFruits = GameObject.FindGameObjectsWithTag("Fruit");
         if (allFruits.Length == 0)
         {
@@ -58,8 +64,13 @@ public class SmallFruitRemovePowerUp : MonoBehaviour
         {
             Destroy(fruit);
         }
-
         isActive = false;
+        Invoke(nameof(EnableFruitDropper), 0.2f); // Enable FruitDropper after 0.2 seconds
         PowerUpManager.instance.OnPowerUpComplete(); // notify after successful removal
+    }
+
+    private void EnableFruitDropper()
+    {
+        FruitDropper.SetActive(true);
     }
 }

@@ -73,7 +73,7 @@ public class FruitDropperController : MonoBehaviour
             case TouchPhase.Ended:
                 float delta = (touch.position - lastTouchPos).magnitude;
                 float speed = delta / (Time.time - lastTouchTime);
-
+                lastTouchPos = touch.position; lastTouchTime = Time.time;
                 if (speed > swipeDropThreshold || delta < 50f)
                 {
                     TryDrop();
@@ -122,6 +122,9 @@ public class FruitDropperController : MonoBehaviour
     {
         if (!canDrop || FruitSelector.instance == null || isInputDisabled) return;
 
+        // Prevent dropping if a power-up is active
+        if (PowerUpManager.instance != null && PowerUpManager.instance.IsPowerUpActive) return;
+
         Vector3 spawnPos = dropSpawnPoint ? dropSpawnPoint.position : transform.position;
         Instantiate(FruitSelector.instance.GetFruitToSpawn(), spawnPos, Quaternion.identity);
 
@@ -130,7 +133,6 @@ public class FruitDropperController : MonoBehaviour
         if (!sfxMuted && dropSound != null)
             dropSound.Play();
 
-      
         StartCoroutine(EnableDropAfterDelay());
     }
 
