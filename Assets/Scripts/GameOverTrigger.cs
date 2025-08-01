@@ -12,6 +12,7 @@ public class GameOverTrigger : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private FruitDropperController fruitDropperController;
+    [SerializeField] private Interstitial_Ad interstitial_Ad;
 
     [Header("Game Over Timing")]
     [SerializeField] private float gameOverDelay = 3f;
@@ -90,5 +91,7 @@ public class GameOverTrigger : MonoBehaviour
         PanelManager.instance?.ShowGameOver();
         PanelManager.instance?.gameOverPanelScript?.ShowScore();
         GameSaveManager.instance?.DeleteSave();
+
+        interstitial_Ad.ShowInterstitialAd();
     }
 }

@@ -43,7 +43,7 @@ public class GameOverPanel : MonoBehaviour
                     highScoreEffect.Play();
             }
 
-            }
+        }
         else
         {
             highScoreText.gameObject.SetActive(false);
