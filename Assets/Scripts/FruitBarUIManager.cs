@@ -34,6 +34,16 @@ public class FruitBarUIManager : MonoBehaviour
         }
 
         unlocked = new bool[slots.Length];
+        // Load unlocked fruits from PlayerPrefs
+        for (int i = 0; i < unlocked.Length; i++)
+        {
+            int fruitIndex = StartIndex + i;
+            unlocked[i] = PlayerPrefs.GetInt(GetFruitUnlockKey(fruitIndex), 0) == 1;
+            if (unlocked[i])
+            {
+                slots[i].Reveal();
+            }
+        }
     }
 
     public void UnlockFruit(int fruitIndex)
@@ -45,7 +55,11 @@ public class FruitBarUIManager : MonoBehaviour
         unlocked[slotIndex] = true;
         slots[slotIndex].Reveal();
 
-        //  Show unlock animation panel
+        // Save unlock state in PlayerPrefs
+        PlayerPrefs.SetInt(GetFruitUnlockKey(fruitIndex), 1);
+        PlayerPrefs.Save();
+
+        // Show unlock animation panel
         if (fruitUnlockPanel != null)
         {
             fruitUnlockPanel.ShowFruitUnlock(fruitIndex);
@@ -61,5 +75,10 @@ public class FruitBarUIManager : MonoBehaviour
     private bool IsValidSlotIndex(int index)
     {
         return index >= 0 && index < slots.Length;
+    }
+
+    private string GetFruitUnlockKey(int fruitIndex)
+    {
+        return $"FruitUnlocked_{fruitIndex}";
     }
 }

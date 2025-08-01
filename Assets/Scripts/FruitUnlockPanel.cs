@@ -9,6 +9,9 @@ public class FruitUnlockPanel : MonoBehaviour
     [SerializeField] private Animator panelAnimator;
     private bool isShowing = false;
 
+    [Header("Sound")]
+    public AudioClip fruitUnlockSound;
+
     private void Awake()
     {
         panel.SetActive(false); // Hide panel by default
@@ -28,6 +31,11 @@ public class FruitUnlockPanel : MonoBehaviour
 
         fruitImage.sprite = fruitSprites[fruitIndex];
         panel.SetActive(true);
+        // Play using SoundManager
+        if (fruitUnlockSound != null && SoundManager.instance != null)
+        {
+            SoundManager.instance.PlayButtonClick(fruitUnlockSound);
+        }
         panelAnimator.Play("FruitUnlockAnim", 0, 0f); // Reset and play from start
     }
 

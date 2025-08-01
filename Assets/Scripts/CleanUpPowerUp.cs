@@ -16,8 +16,15 @@ public class CleanUpPowerUp : MonoBehaviour
     [SerializeField] private float rotationSpeed = 200f;
     [SerializeField] private float holdTime = 1f;
 
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip cameraZoomOutSound;
+    [SerializeField] private AudioClip cameraZoomInSound;
+
+
     private float originalCamSize;
     private Quaternion originalRotation;
+
+    public static bool IsActive { get; private set; } // Add static flag
 
     private void Start()
     {
@@ -28,19 +35,20 @@ public class CleanUpPowerUp : MonoBehaviour
     public void Activate()
     {
         StopAllCoroutines();
+        PowerUpManager.instance.PowerUpDisableElement();
+        IsActive = true;
         StartCoroutine(PerformCleanUp());
     }
 
     private IEnumerator PerformCleanUp()
     {
-        // Step 1: Zoom Out Camera
+        SoundManager.instance.PlayButtonClick(cameraZoomOutSound);
         while (Mathf.Abs(mainCamera.orthographicSize - zoomedOutSize) > 0.01f)
         {
             mainCamera.orthographicSize = Mathf.MoveTowards(mainCamera.orthographicSize, zoomedOutSize, cameraZoomSpeed * Time.deltaTime);
             yield return null;
         }
 
-        // Step 2: Rotate Container
         Quaternion targetRotation = Quaternion.Euler(0, 0, rotationAngle);
         while (Quaternion.Angle(container.rotation, targetRotation) > 0.5f)
         {
@@ -48,29 +56,32 @@ public class CleanUpPowerUp : MonoBehaviour
             yield return null;
         }
 
-        // Step 3: Hold
         yield return new WaitForSeconds(holdTime);
 
-        // Step 4: Rotate Container Back
         while (Quaternion.Angle(container.rotation, originalRotation) > 0.5f)
         {
             container.rotation = Quaternion.RotateTowards(container.rotation, originalRotation, rotationSpeed * Time.deltaTime);
             yield return null;
         }
 
-        // Step 5: Zoom In Camera
+        SoundManager.instance.PlayButtonClick(cameraZoomInSound);
         while (Mathf.Abs(mainCamera.orthographicSize - originalCamSize) > 0.01f)
         {
             mainCamera.orthographicSize = Mathf.MoveTowards(mainCamera.orthographicSize, originalCamSize, cameraZoomSpeed * Time.deltaTime);
             yield return null;
         }
 
-        // Final correction
         mainCamera.orthographicSize = originalCamSize;
         container.rotation = originalRotation;
 
-        //  Notify manager cleanup is done
-        PowerUpManager.instance.OnPowerUpComplete();
+        Invoke(nameof(PowerUpManager.instance.PowerUpEnableElement), 0.2f);
+        Invoke(nameof(EnablePowerUpElements), 0.2f);
+        IsActive = false; // Reset flag
+    }
+
+    private void EnablePowerUpElements()
+    {
+        PowerUpManager.instance.PowerUpEnableElement();
     }
 }
 

@@ -21,6 +21,17 @@ public class PowerUpManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI SmallFruitUpgradeCredits;
     [SerializeField] TextMeshProUGUI CleanUpPowerUpCredits;
 
+    [Header("Power-Up Effected Elements")]
+    [SerializeField] GameObject fruitDropper;
+    [SerializeField] GameObject scoreBoard;
+    [SerializeField] GameObject nextFruitBar;
+    [SerializeField] GameObject noAds;
+    [SerializeField] GameObject setting;
+    [SerializeField] GameObject powerup1;
+    [SerializeField] GameObject powerup2;
+    [SerializeField] GameObject powerup3;
+    [SerializeField] GameObject powerup4;
+    [SerializeField] GameObject fruitBar;
     
     private int boomCount = 1;
     private int fruitUpgradeCount = 1;
@@ -141,6 +152,34 @@ public class PowerUpManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         isPowerUpActive = false;
+    }
+
+    public void PowerUpDisableElement()
+    {
+        fruitDropper.SetActive(false);
+        scoreBoard.SetActive(false);
+        nextFruitBar.SetActive(false);
+        noAds.SetActive(false);
+        setting.SetActive(false);
+        powerup1.SetActive(false);
+        powerup2.SetActive(false);  
+        powerup3.SetActive(false);
+        powerup4.SetActive(false);
+        fruitBar.SetActive(false);
+    }
+
+    public void PowerUpEnableElement()
+    {
+        fruitDropper.SetActive(true);
+        scoreBoard.SetActive(true);
+        nextFruitBar.SetActive(true);
+        noAds.SetActive(true);
+        setting.SetActive(true);
+        powerup1.SetActive(true);
+        powerup2.SetActive(true);
+        powerup3.SetActive(true);
+        powerup4.SetActive(true);
+        fruitBar.SetActive(true);
     }
 
     // Convenient methods for buttons

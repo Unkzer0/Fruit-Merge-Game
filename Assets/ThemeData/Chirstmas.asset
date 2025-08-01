@@ -19,14 +19,14 @@ MonoBehaviour:
   gameSceneBackground: {fileID: 21300000, guid: 7877b659d045b654ead1d69c110db7ca, type: 3}
   logo: {fileID: 21300000, guid: c284f949b7b228c4db5981acbaf5e671, type: 3}
   fruitSprites:
-  - {fileID: 21300000, guid: 512b47d936494d24eaaeac28721194bc, type: 3}
+  - {fileID: 21300000, guid: 7b1a2cc7026ab0c4286ff81340df44ab, type: 3}
   - {fileID: 21300000, guid: dfd6482f01c9f474d891e36c3ed4512f, type: 3}
-  - {fileID: 21300000, guid: 8cd4c31614853084c85ee04650e9f3ae, type: 3}
+  - {fileID: 21300000, guid: 2786c9516d5a79847b703b92e8bd5cbc, type: 3}
   - {fileID: 21300000, guid: 84c0db7755f30c6458e345ecbf11d221, type: 3}
   - {fileID: 21300000, guid: 357773ccf5be36c43acaad8a422a44f7, type: 3}
-  - {fileID: 21300000, guid: ff3dbef7a5f7c9e4ab0166214f2af02d, type: 3}
-  - {fileID: 21300000, guid: 6da11583d688ef646b3dcab2d5b4b05a, type: 3}
-  - {fileID: 21300000, guid: a22614fdbbde7da479b17cda1ab12b9c, type: 3}
-  - {fileID: 21300000, guid: 21566af4a94be4843973afd0706b3c54, type: 3}
+  - {fileID: 21300000, guid: f44b52b25685c244099bd800a73f04fd, type: 3}
+  - {fileID: 21300000, guid: e02a35f3fd24e484aba05dca3bbb211e, type: 3}
+  - {fileID: 21300000, guid: 9288b6be1229c1e4d90f82bd8c42b989, type: 3}
+  - {fileID: 21300000, guid: d225e957d5198594185b6e2ea2d99283, type: 3}
   - {fileID: 21300000, guid: 5f78b5bd5e650d246a55761d2a6e2c0e, type: 3}
-  - {fileID: 21300000, guid: 3d5e82611d29ade4d942d0d003db0a69, type: 3}
+  - {fileID: 21300000, guid: 033372abf5380b842bcc6184cad6f95c, type: 3}

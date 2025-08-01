@@ -47,6 +47,9 @@ public class MergeManager : MonoBehaviour
     {
         if (fruit1 == null || fruit2 == null) return;
 
+        // Prevent merging if CleanUpPowerUp is active
+        if (CleanUpPowerUp.IsActive) return;
+
         mergeQueue.Enqueue(new MergeRequest
         {
             index = fruitIndex,

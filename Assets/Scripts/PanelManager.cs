@@ -9,7 +9,7 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject settingsOnMainMenuPanel;
+    [SerializeField] private GameObject aboutUsPanel;
     [SerializeField] private GameObject boomPowerUpPanel;
     [SerializeField] private GameObject fruitUpgradePowerUpPanel; 
     [SerializeField] private GameObject smallFruitPowerUpPanel; 
@@ -69,7 +69,7 @@ public class PanelManager : MonoBehaviour
                smallFruitPowerUpPanel.activeSelf ||
                cleanPowerUpPanel.activeSelf ||
                fruitUpgradePowerUpPanel.activeSelf ||
-               settingsOnMainMenuPanel.activeSelf ||
+               aboutUsPanel.activeSelf ||
                shopPanel.activeSelf ||
                themePanel.activeSelf ||
                fruitUnlockPanel.activeSelf; //  Add this line
@@ -82,7 +82,7 @@ public class PanelManager : MonoBehaviour
     public void ShowOnly(GameObject panelToShow)
     {
         // If the panel to show is themePanel or shopPanel, exclude mainMenuPanel from being hidden
-        bool excludeMainMenu = panelToShow == themePanel || panelToShow == shopPanel || panelToShow == settingsOnMainMenuPanel;
+        bool excludeMainMenu = panelToShow == themePanel || panelToShow == shopPanel || panelToShow == aboutUsPanel;
 
         HideAllPanels(excludeMainMenu);
         justClosedPanel = true;
@@ -100,7 +100,7 @@ public class PanelManager : MonoBehaviour
         smallFruitPowerUpPanel.SetActive(false);
         cleanPowerUpPanel.SetActive(false);
         fruitUpgradePowerUpPanel.SetActive(false);
-        settingsOnMainMenuPanel.SetActive(false);
+        aboutUsPanel.SetActive(false);
         shopPanel.SetActive(false);
         themePanel.SetActive(false);
     }
@@ -109,7 +109,7 @@ public class PanelManager : MonoBehaviour
     public void ShowMainMenu() { PlayClickSound(); ShowOnly(mainMenuPanel); }
     public void ShowGameOver() { ShowOnly(gameOverPanel); }
     public void ShowSettings() { PlayClickSound(); ShowOnly(settingsPanel); }
-    public void ShowSettingOnMainMenu() { PlayClickSound(); ShowOnly(settingsOnMainMenuPanel); }
+    public void ShowAboutUsMenu() { PlayClickSound(); ShowOnly(aboutUsPanel); }
     public void ShowBoompowerUp() { PlayClickSound(); ShowOnly(boomPowerUpPanel); }
     public void ShowSmallFruitpowerUp() { PlayClickSound(); ShowOnly(smallFruitPowerUpPanel); }
     public void ShowClearFruitpowerUp() { PlayClickSound(); ShowOnly(cleanPowerUpPanel); }

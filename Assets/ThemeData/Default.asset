@@ -16,7 +16,7 @@ MonoBehaviour:
   bearSprite: {fileID: 21300000, guid: 6f5b356457e494c47933e0246b1419bb, type: 3}
   mainMenuBackground: {fileID: 21300000, guid: 4dc4a89528e27394cb4cc5f76b8b167b, type: 3}
   gameOverPanelBackground: {fileID: 21300000, guid: 4dc4a89528e27394cb4cc5f76b8b167b, type: 3}
-  gameSceneBackground: {fileID: 21300000, guid: 8df8a8436a543fa4bac3cccb24d5d1f3, type: 3}
+  gameSceneBackground: {fileID: 21300000, guid: 068b931b153b3e340a8170ec460e81d7, type: 3}
   logo: {fileID: 21300000, guid: c284f949b7b228c4db5981acbaf5e671, type: 3}
   fruitSprites:
   - {fileID: 21300000, guid: 61b9e931e455b7c408901c9bf499bf95, type: 3}
