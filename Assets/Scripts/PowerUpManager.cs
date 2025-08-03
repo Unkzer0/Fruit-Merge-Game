@@ -32,7 +32,9 @@ public class PowerUpManager : MonoBehaviour
     [SerializeField] GameObject powerup3;
     [SerializeField] GameObject powerup4;
     [SerializeField] GameObject fruitBar;
-    
+
+    [SerializeField] private AudioClip buttonClickSound; 
+
     private int boomCount = 1;
     private int fruitUpgradeCount = 1;
     private int smallFruitRemoveCount = 1;
@@ -48,7 +50,12 @@ public class PowerUpManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    private bool IsContainerEmpty()
+ public void CrossButton()
+    {
+        PlayClickSound();
+        PanelManager.instance?.ShowOnly(null);
+    }
+private bool IsContainerEmpty()
     {
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(LayerMask.GetMask("Fruit"));
@@ -180,6 +187,14 @@ public class PowerUpManager : MonoBehaviour
         powerup3.SetActive(true);
         powerup4.SetActive(true);
         fruitBar.SetActive(true);
+    }
+
+    private void PlayClickSound()
+    {
+        if (buttonClickSound != null)
+        {
+            SoundManager.instance?.PlayButtonClick(buttonClickSound);
+        }
     }
 
     // Convenient methods for buttons

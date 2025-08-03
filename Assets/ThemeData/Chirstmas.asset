@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: Chirstmas
   m_EditorClassIdentifier: 
   themeName: Chirstmas
-  bearSprite: {fileID: 21300000, guid: 117c3f7b4d8f98446b52f13fcdae5549, type: 3}
+  bearSprite: {fileID: 21300000, guid: c4c25cfe5f17ff743bfd921b2045e095, type: 3}
   mainMenuBackground: {fileID: 21300000, guid: b2460e1d4d2f43d4abbf2d96a04319dc, type: 3}
   gameOverPanelBackground: {fileID: 21300000, guid: b2460e1d4d2f43d4abbf2d96a04319dc, type: 3}
   gameSceneBackground: {fileID: 21300000, guid: 7877b659d045b654ead1d69c110db7ca, type: 3}
-  logo: {fileID: 21300000, guid: c284f949b7b228c4db5981acbaf5e671, type: 3}
+  logo: {fileID: 21300000, guid: eadaf2185f1b48642950b9540e7cb8e8, type: 3}
   fruitSprites:
   - {fileID: 21300000, guid: 7b1a2cc7026ab0c4286ff81340df44ab, type: 3}
   - {fileID: 21300000, guid: dfd6482f01c9f474d891e36c3ed4512f, type: 3}
   - {fileID: 21300000, guid: 2786c9516d5a79847b703b92e8bd5cbc, type: 3}
   - {fileID: 21300000, guid: 84c0db7755f30c6458e345ecbf11d221, type: 3}
-  - {fileID: 21300000, guid: 357773ccf5be36c43acaad8a422a44f7, type: 3}
+  - {fileID: 21300000, guid: 364b22955a0825746890a40a672e2012, type: 3}
   - {fileID: 21300000, guid: f44b52b25685c244099bd800a73f04fd, type: 3}
   - {fileID: 21300000, guid: e02a35f3fd24e484aba05dca3bbb211e, type: 3}
   - {fileID: 21300000, guid: 9288b6be1229c1e4d90f82bd8c42b989, type: 3}
-  - {fileID: 21300000, guid: d225e957d5198594185b6e2ea2d99283, type: 3}
+  - {fileID: 21300000, guid: 8406df3654c57cc4e845d54bb011c97e, type: 3}
   - {fileID: 21300000, guid: 5f78b5bd5e650d246a55761d2a6e2c0e, type: 3}
   - {fileID: 21300000, guid: 033372abf5380b842bcc6184cad6f95c, type: 3}

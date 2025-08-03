@@ -121,12 +121,6 @@ public class ThemeManager : MonoBehaviour
                         spriteRenderer.sprite = fruitSprites[i];
                 }
             }
-
-            if (fruitSelector.CurrentFruitIndex < fruitSprites.Length)
-                fruitSelector.currentFruitSpriteRenderer.sprite = fruitSprites[fruitSelector.CurrentFruitIndex];
-
-            if (fruitSelector.NextFruitIndex < fruitSprites.Length)
-                fruitSelector.nextFruitUIImage.sprite = fruitSprites[fruitSelector.NextFruitIndex];
         }
     }
 }
