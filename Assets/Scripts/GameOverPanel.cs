@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using GoogleMobileAds.Api;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class GameOverPanel : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private AudioClip buttonClickSound;
     [SerializeField] private AudioClip applauseSound;
+
+    [SerializeField] private BannerAd bannerAd;
+    [SerializeField] private RewardAd rewardAd;
+    [SerializeField] private Interstitial_Ad interstitialAd;
 
 
     [Header("Effects")]
@@ -83,6 +88,18 @@ public class GameOverPanel : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         PlayerPrefs.Save();
+        if (rewardAd != null)
+        {
+            rewardAd.DestroyRewardedAd();
+        }
+        if (interstitialAd != null)
+        {
+            interstitialAd.HandleAdClosed();
+        }
+        if (bannerAd != null)
+        {
+            bannerAd.DestroyAd();
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

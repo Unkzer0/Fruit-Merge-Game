@@ -116,4 +116,5 @@ public class PanelManager : MonoBehaviour
     public void ShowFruitUpgradepowerUp() { PlayClickSound(); ShowOnly(fruitUpgradePowerUpPanel); }
     public void ShowShop() { PlayClickSound(); ShowOnly(shopPanel); }
     public void ShowtTheme() { PlayClickSound(); ShowOnly(themePanel); }
+
 }

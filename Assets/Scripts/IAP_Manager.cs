@@ -55,7 +55,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
     public NonConsumableItem ncItem;
     public ComboBundleNonConsumableItem cbItem;
 
-    //public DiamondManager diamondManager;
+    public DiamondManager diamondManager;
     public BannerAd bannerAd;
     public Interstitial_Ad interstitial_Ad;
     public List<TextMeshProUGUI> priceTexts;
@@ -118,14 +118,17 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         {
             if (product.definition.id == item.Id)
             {
-                //diamondManager.UpdateDiamonds(item.diamondAmount);
+                diamondManager.AddDiamonds(item.diamondAmount);
                 break;
             }
         }
 
         if (product.definition.id == sbItem.Id)
         {
-            // powerUpManager.UpdatePowerUps(sbItems.powerUpAmount);
+             PowerUpManager.instance?.AddPowerUp("PowerUp_Boom", sbItem.powerUpAmount);
+             PowerUpManager.instance?.AddPowerUp("PowerUp_FruitUpgrade", sbItem.powerUpAmount);
+             PowerUpManager.instance?.AddPowerUp("PowerUp_SmallFruitRemove", sbItem.powerUpAmount);
+             PowerUpManager.instance?.AddPowerUp("PowerUp_CleanUp", sbItem.powerUpAmount);
         }
 
         if (product.definition.id == ncItem.Id)
@@ -136,7 +139,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         if (product.definition.id == cbItem.Id)
         {
             RemoveAds();
-            //diamondManager.UpdateDiamonds(cbItem.diamondAmount);
+            diamondManager.AddDiamonds(cbItem.diamondAmount);
         }
 
         return PurchaseProcessingResult.Complete;
@@ -246,7 +249,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
             }
         }
 
-        // ✅ Now handle scItem separately (use priceTexts[4] in this case)
+        // Now handle scItem separately (use priceTexts[4] in this case)
         if (sbItem != null && priceTexts.Count > cItems.Count && priceTexts[cItems.Count] != null)
         {
             Product sbProduct = m_StoreController.products.WithID(sbItem.Id);
@@ -255,6 +258,28 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
             {
                 string localizedPrice = sbProduct.metadata.localizedPriceString;
                 priceTexts[cItems.Count].text = localizedPrice; // 👉 This will use index 4 when cItems.Count = 4
+            }
+        }
+
+        if (cbItem != null && priceTexts.Count > cItems.Count + 1 && priceTexts[cItems.Count + 1] != null)
+        {
+            Product cbProduct = m_StoreController.products.WithID(cbItem.Id);
+
+            if (cbProduct != null)
+            {
+                string localizedPrice = cbProduct.metadata.localizedPriceString;
+                priceTexts[cItems.Count + 1].text = localizedPrice;
+            }
+        }
+
+        if (ncItem != null && priceTexts.Count > cItems.Count + 2 && priceTexts[cItems.Count + 2] != null)
+        {
+            Product ncProduct = m_StoreController.products.WithID(ncItem.Id);
+
+            if (ncProduct != null)
+            {
+                string localizedPrice = ncProduct.metadata.localizedPriceString;
+                priceTexts[cItems.Count + 2].text = localizedPrice;
             }
         }
     }

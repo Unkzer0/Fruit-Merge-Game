@@ -122,6 +122,7 @@ public class Interstitial_Ad : MonoBehaviour
 #if UNITY_ANDROID || UNITY_IOS
         Debug.Log("Interstitial ad closed.");
         DestroyInterstitialAd();
+        LoadInterstitialAd();
 #endif
     }
 

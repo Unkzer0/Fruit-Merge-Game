@@ -7,7 +7,7 @@ public class GameSaveManager : MonoBehaviour
     public static GameSaveManager instance;
     private string saveFilePath;
     private bool hasRestored = false;
-
+    
     private void Awake()
     {
         if (instance == null)

@@ -8,6 +8,7 @@ using UnityEngine;
 public class RewardAd : MonoBehaviour
 {
     public string _adUnitId;
+    public string currentRewardKey = null;
     private RewardedAd _rewardedAd;
     private bool isAdMobInitialized = false;
     //[SerializeField] private DiamondManager diamondManager;
@@ -97,12 +98,18 @@ public class RewardAd : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
 
-        /*if (diamondManager != null)
+        if (!string.IsNullOrEmpty(currentRewardKey) && PowerUpManager.instance != null)
         {
-            diamondManager.UpdateDiamonds(25);
-            Debug.Log("+25 diamonds granted.");
-        }*/
+            PowerUpManager.instance.AddPowerUp(currentRewardKey, 1);
+            Debug.Log($"Granted +1 {currentRewardKey} power-up after ad.");
+        }
+        else
+        {
+            Debug.LogWarning("No power-up reward key was set.");
+        }
 
+        // Reset for safety
+        currentRewardKey = null;
         Debug.Log($"Rewarded ad rewarded user. Type: {reward.Type}, amount: {reward.Amount}");
     }
 
@@ -124,7 +131,9 @@ public class RewardAd : MonoBehaviour
     private void HandleAdClosed()
     {
         Debug.Log("Rewarded ad closed.");
+        PowerUpManager.instance?.ClosePowerUpPanel();
         DestroyRewardedAd();
+        LoadRewardedAd();
     }
 
     private void HandleAdFailedToOpen(AdError error)

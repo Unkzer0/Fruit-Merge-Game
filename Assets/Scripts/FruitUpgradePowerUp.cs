@@ -4,6 +4,7 @@ public class FruitUpgradePowerUp : MonoBehaviour
 {
     private Camera mainCam;
     private bool isActive = false;
+    [SerializeField] GameObject powerUpInfo;
 
     [Header("Sound")]
     public AudioClip FruitUpgradeSound;
@@ -12,6 +13,7 @@ public class FruitUpgradePowerUp : MonoBehaviour
     {
         isActive = true;
         PowerUpManager.instance.PowerUpDisableElement();
+        powerUpInfo.SetActive(true);
     }
     private void Start()
     {
@@ -42,19 +44,46 @@ public class FruitUpgradePowerUp : MonoBehaviour
 
         foreach (Collider2D col in hits)
         {
-            // Only upgrade the exact fruit that was clicked/touched
-            if (col.CompareTag("Fruit"))
+            // Traverse up the hierarchy to find the root object tagged as "Fruit"
+            Transform root = col.transform;
+            while (root.parent != null && !root.CompareTag("Fruit"))
             {
-                Transform fruitTransform = col.transform;
+                root = root.parent;
+            }
+
+            // Check if it's a valid fruit
+            if (root.CompareTag("Fruit"))
+            {
+                Fruit fruitScript = root.GetComponent<Fruit>();
+                if (fruitScript == null) return;
+
+                int currentIndex = fruitScript.fruitIndex;
+                int nextIndex = currentIndex + 1;
+
+                // Check if it is upgradable
+                if (nextIndex >= FruitSelector.instance.Fruits.Length)
+                {
+                    Debug.Log("This fruit is already at max level.");
+                    return;
+                }
+
+                // Upgrade logic
+                Vector3 spawnPos = root.position;
+                Transform parent = root.parent;
+
+                Destroy(root.gameObject); // Destroy current fruit
+                Instantiate(FruitSelector.instance.Fruits[nextIndex], spawnPos, Quaternion.identity, parent); // Spawn next level
+
                 SoundManager.instance.PlayButtonClick(FruitUpgradeSound);
-                GameObject fruitClone = Instantiate(fruitTransform.gameObject, fruitTransform.position, fruitTransform.rotation, fruitTransform.parent);
                 isActive = false;
                 PowerUpManager.instance.OnPowerUpComplete();
+                powerUpInfo.SetActive(false);
                 Invoke(nameof(EnablePowerUpElements), 0.2f);
                 return;
             }
         }
     }
+
     private void EnablePowerUpElements()
     {
         PowerUpManager.instance.PowerUpEnableElement();

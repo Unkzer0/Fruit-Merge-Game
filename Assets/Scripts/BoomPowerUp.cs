@@ -4,6 +4,7 @@ public class BoomPowerUp : MonoBehaviour
 {
     private Camera mainCam;
     private bool isActive = false;
+    [SerializeField] private GameObject powerUpInfo;
 
     [Header("Sound")]
     public AudioClip BoomSound;
@@ -15,6 +16,7 @@ public class BoomPowerUp : MonoBehaviour
         isActive = true;
         mainCam = Camera.main;
         PowerUpManager.instance.PowerUpDisableElement();
+        powerUpInfo.SetActive(true);
     }
 
     private void Update()
@@ -54,9 +56,8 @@ public class BoomPowerUp : MonoBehaviour
                 SoundManager.instance.PlayButtonClick(BoomSound);
                 Destroy(root.gameObject);
                 isActive = false;
-                PowerUpManager.instance.OnPowerUpComplete(); // Inform manager
-
-                // Use a wrapper method to call PowerUpEnableElement
+                PowerUpManager.instance.OnPowerUpComplete();
+                powerUpInfo.SetActive(false);
                 Invoke(nameof(EnablePowerUpElements), 0.2f);
                 return;
             }

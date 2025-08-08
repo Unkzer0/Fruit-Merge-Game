@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1558badacd42ffa429f5927001144a70, type: 3}
-  m_Name: Chirstmas
+  m_Name: Christmas
   m_EditorClassIdentifier: 
-  themeName: Chirstmas
+  themeName: Christmas
   bearSprite: {fileID: 21300000, guid: c4c25cfe5f17ff743bfd921b2045e095, type: 3}
   mainMenuBackground: {fileID: 21300000, guid: b2460e1d4d2f43d4abbf2d96a04319dc, type: 3}
   gameOverPanelBackground: {fileID: 21300000, guid: b2460e1d4d2f43d4abbf2d96a04319dc, type: 3}

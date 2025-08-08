@@ -19,6 +19,10 @@ public class ThemeManager : MonoBehaviour
     [SerializeField] private SpriteRenderer gameSceneBackgroundRenderer;
     [SerializeField] private Image logo;
 
+    [Header("Theme Particle Effects")]
+    [SerializeField] private ParticleSystem summerParticle;
+    [SerializeField] private ParticleSystem winterParticle;
+
     private const string SelectedThemeKey = "SelectedTheme";
 
     private void Awake()
@@ -26,7 +30,7 @@ public class ThemeManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Optional if you want it to persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -67,6 +71,24 @@ public class ThemeManager : MonoBehaviour
 
         // Update fruits already present
         UpdateExistingFruitsInScene(theme.fruitSprites);
+
+        // Activate/deactivate particle effects
+        if (theme.themeName == "Summer")
+        {
+            if (summerParticle != null) summerParticle.gameObject.SetActive(true);
+            if (winterParticle != null) winterParticle.gameObject.SetActive(false);
+        }
+        else if (theme.themeName == "Christmas")
+        {
+            if (summerParticle != null) summerParticle.gameObject.SetActive(false);
+            if (winterParticle != null) winterParticle.gameObject.SetActive(true);
+        }
+        else
+        {
+            // Deactivate both if theme is neither
+            if (summerParticle != null) summerParticle.gameObject.SetActive(false);
+            if (winterParticle != null) winterParticle.gameObject.SetActive(false);
+        }
     }
 
     private void LoadTheme()
